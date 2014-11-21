@@ -2,18 +2,18 @@
 #include "Twinkler.h"
 
 #define LED_PIN     5
-#define NUM_LEDS    150
-#define BRIGHTNESS  100
+#define NUM_LEDS    50
+#define BRIGHTNESS  200
 #define LED_TYPE    WS2811
-#define COLOR_ORDER GRB
+#define COLOR_ORDER RGB
 
 CRGB leds[NUM_LEDS];
 
-#define NUM_TWINKLE 30
+#define NUM_TWINKLE 40
 #define MIN_VALUE 0
 #define MAX_VALUE 255
-#define MAX_DELAY_BETWEEN_TWINKLES 300
-#define TWINKLE_INCREMENT 2
+#define MAX_DELAY_BETWEEN_TWINKLES 10
+#define TWINKLE_INCREMENT 100
 #define DELAY_BETWEEN_INCREMENTS 1
 
 Twinkler twinklers[NUM_TWINKLE];
