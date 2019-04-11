@@ -1,92 +1,74 @@
 class FadePattern: public LightPattern {
 public:
-	FadePattern (LEDGroup* target, uint8_t beginRed, uint8_t beginGreen,
-				uint8_t beginBlue, uint8_t targetRed, uint8_t targetGreen,
-				uint8_t targetBlue, int increment, int waitMillis, long duration,
-				long delayAfter) {
-			params.patternId = PATTERN_ID_FADE;
-			params.target = target;
-			params.localPattern = true;
-			params.width = increment;
-			params.beginRed = beginRed;
-			params.beginGreen = beginGreen;
-			params.beginBlue = beginBlue;
-			params.targetRed = targetRed;
-			params.targetGreen = targetGreen;
-			params.targetBlue = targetBlue;
-			params.waitMillis = waitMillis;
-			params.duration = duration;
-			params.delayAfter = delayAfter;
+	FadePattern(PixelGroup* target, uint8_t beginRed, uint8_t beginGreen,
+			uint8_t beginBlue, uint8_t targetRed, uint8_t targetGreen,
+			uint8_t targetBlue, long duration, long delayAfter = 0) :
+			LightPattern(target, duration, delayAfter), beginRed(
+					beginRed), beginGreen(beginGreen), beginBlue(beginBlue), targetRed(
+					targetRed), targetGreen(targetGreen), targetBlue(targetBlue) {
 	}
 
-	bool run(Adafruit_NeoPixel* strip) {
-		if (state.patternStart == 0) {
-			state.patternStart = micros();
-			state.curRed = params.beginRed;
-			state.curGreen = params.beginGreen;
-			state.curBlue = params.beginBlue;
+	virtual void reset() {
+		LightPattern::reset();
+		curRed = beginRed;
+		curGreen = beginGreen;
+		curBlue = beginBlue;
+	}
+
+	virtual bool run(Adafruit_NeoPixel* strip) {
+		if (millis() < iterationDelayTime) {
+			// do nothing, waiting until end of iteration
+		} else {
+			startIteration();
+
+			fadeValue(&(curRed), targetRed, increment);
+			fadeValue(&(curGreen), targetGreen,	increment);
+			fadeValue(&(curBlue), targetBlue, increment);
+
+			uint32_t color = Adafruit_NeoPixel::Color(curRed,
+					curGreen, curBlue);
+			target->setAllColor(strip, color);
+			strip->show();
+
+			calculateTiming(getMaxRemainingChange());
 		}
 
-		state.iterationStart = micros();
-		bool redDone = fadeValue(&(state.curRed), params.targetRed,
-				params.width);
-		bool greenDone = fadeValue(&(state.curGreen), params.targetGreen,
-				params.width);
-		bool blueDone = fadeValue(&(state.curBlue), params.targetBlue,
-				params.width);
+		checkErase(strip);
+		return isDone();
+	}
 
-		uint32_t color = strip->Color(state.curRed, state.curGreen, state.curBlue);
-		params.target->setAllColor(strip, color);
-		strip->show();
-
-		int remainingRed = abs(state.curRed - params.targetRed);
-		int remainingGreen = abs(state.curGreen - params.targetGreen);
-		int remainingBlue = abs(state.curBlue - params.targetBlue);
-		int maxChange = max(max(remainingRed, remainingGreen), remainingBlue);
-
-		long delayTime = calculateFadeDelay(maxChange);
-		if (delayTime > 0) {
-			delayMicroseconds(delayTime);
-		}
-		bool colorDone = (redDone && greenDone && blueDone);
-		if (colorDone & state.patternEnd == 0) {
-			state.patternEnd = millis();
-		}
-
-		if (colorDone && millis() >= (state.patternEnd + params.delayAfter)) {
-			state.done = true;
-		}
-		return state.done;	}
 private:
-	bool fadeValue(uint8_t* curValue, uint8_t targetValue, byte increment) {
-	  bool rval= true;
-	  if (*curValue< targetValue - increment) {
-	    *curValue += increment;
-	    rval = false;
-	  } else if (*curValue > targetValue + increment) {
-	    *curValue -= increment;
-	    rval = false;
-	  } else {
-	    *curValue = targetValue;
-	  }
-	  return rval;
+	uint8_t curRed = 0;
+	uint8_t curGreen = 0;
+	uint8_t curBlue = 0;
+
+	uint8_t beginRed;
+	uint8_t beginGreen;
+	uint8_t beginBlue;
+
+	uint8_t targetRed;
+	uint8_t targetGreen;
+	uint8_t targetBlue;
+
+	int getMaxRemainingChange() {
+		int remainingRed = abs(curRed - targetRed);
+		int remainingGreen = abs(curGreen - targetGreen);
+		int remainingBlue = abs(curBlue - targetBlue);
+		return max(max(remainingRed, remainingGreen), remainingBlue);
 	}
 
-	long calculateFadeDelay(int maxChange) {
-		if (maxChange > 0) {
-			int remainingIterations = maxChange / params.width;
-
-			long timeSpent = micros() - state.patternStart;
-			long timeRemaining = params.duration - timeSpent;
-			if (timeRemaining > 0) {
-				long timePerIteration = timeRemaining / remainingIterations;
-				long workTime = micros() - state.iterationStart;
-				return (timePerIteration - workTime);
-			}
+	bool fadeValue(uint8_t* curValue, uint8_t targetValue, byte increment) {
+		bool rval = true;
+		if (*curValue < targetValue - increment) {
+			*curValue += increment;
+			rval = false;
+		} else if (*curValue > targetValue + increment) {
+			*curValue -= increment;
+			rval = false;
+		} else {
+			*curValue = targetValue;
 		}
-		return 0;
+		return rval;
 	}
 };
-
-
 
