@@ -2,11 +2,22 @@
 
 class LightPattern {
 public:
-	LightPattern(PixelGroup* target, long duration, long delayAfter) :
-			target(target), duration(duration), delayAfter(delayAfter) {
+	LightPattern(PixelGroup* target, long duration, long delayAfter, bool eraseWhenDone=false) :
+			target(target), duration(duration), delayAfter(delayAfter), eraseWhenDone(eraseWhenDone) {
 	}
 
-	virtual bool run(Adafruit_NeoPixel* strip) = 0;
+	virtual bool run(Adafruit_NeoPixel* strip) {
+		if (millis() < iterationDelayTime) {
+			// do nothing, waiting until end of iteration
+		} else {
+			startIteration();
+			runIteration(strip);
+			calculateTiming();
+		}
+
+		checkErase(strip);
+		return isDone();
+	}
 
 	bool isDone() { return getPercentDone() >= 100; }
 
@@ -33,18 +44,20 @@ public:
 
 protected:
 	PixelGroup* target;
-	bool eraseWhenDone = false;
-	bool didErase = false;
+	const bool eraseWhenDone = false;
+	const long duration = 0;
+	const long delayAfter = 0;
 
+	bool didErase = false;
 	long patternStart = 0;
 	long iterationStartMicros = micros();
-
-	long duration = 0;
-	long delayAfter = 0;
 
 	int increment = 1;
 	long iterationDelayTime = 0;
 	int iterationCount = 0;
+
+	virtual void calculateTiming() = 0;
+	virtual void runIteration(Adafruit_NeoPixel* strip) = 0;
 
 	void startIteration() {
 		iterationStartMicros = micros();

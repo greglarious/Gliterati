@@ -2,12 +2,21 @@ class RandomPattern: public LightPattern {
 public:
 	RandomPattern(PixelGroup* target, bool localPattern, int width, int size, int waitMillis,
 			long duration) :
-			LightPattern(target, duration, 0), localPattern(localPattern), width(width), size(
+			LightPattern(target, duration, 0, true), localPattern(localPattern), width(width), size(
 					size), waitMillis(waitMillis) {
-		eraseWhenDone = true;
 	}
 
-	bool run(Adafruit_NeoPixel* strip) {
+protected:
+	const bool localPattern;
+	const int width;
+	const int size;
+	const int waitMillis;
+
+	void calculateTiming() {
+		calculateTimingDelay(waitMillis);
+	}
+
+	void runIteration(Adafruit_NeoPixel* strip) {
 		uint32_t color;
 		if (millis() < (patternStart + duration)) {
 			for (int idx = 0; idx < width; idx++) {
@@ -27,16 +36,7 @@ public:
 				} // field vs individual
 			}
 			strip->show();
-			calculateTimingDelay(waitMillis);
 		}
-
-		checkErase(strip);
-		return isDone();
 	}
-private:
-	bool localPattern;
-	int width;
-	int size;
-	int waitMillis;
 };
 

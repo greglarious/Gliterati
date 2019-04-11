@@ -3,9 +3,9 @@ public:
 	FadePattern(PixelGroup* target, uint8_t beginRed, uint8_t beginGreen,
 			uint8_t beginBlue, uint8_t targetRed, uint8_t targetGreen,
 			uint8_t targetBlue, long duration, long delayAfter = 0) :
-			LightPattern(target, duration, delayAfter), beginRed(
-					beginRed), beginGreen(beginGreen), beginBlue(beginBlue), targetRed(
-					targetRed), targetGreen(targetGreen), targetBlue(targetBlue) {
+			LightPattern(target, duration, delayAfter), beginRed(beginRed), beginGreen(
+					beginGreen), beginBlue(beginBlue), targetRed(targetRed), targetGreen(
+					targetGreen), targetBlue(targetBlue) {
 	}
 
 	virtual void reset() {
@@ -15,40 +15,32 @@ public:
 		curBlue = beginBlue;
 	}
 
-	virtual bool run(Adafruit_NeoPixel* strip) {
-		if (millis() < iterationDelayTime) {
-			// do nothing, waiting until end of iteration
-		} else {
-			startIteration();
+protected:
+	const uint8_t beginRed;
+	const uint8_t beginGreen;
+	const uint8_t beginBlue;
 
-			fadeValue(&(curRed), targetRed, increment);
-			fadeValue(&(curGreen), targetGreen,	increment);
-			fadeValue(&(curBlue), targetBlue, increment);
+	const uint8_t targetRed;
+	const uint8_t targetGreen;
+	const uint8_t targetBlue;
 
-			uint32_t color = Adafruit_NeoPixel::Color(curRed,
-					curGreen, curBlue);
-			target->setAllColor(strip, color);
-			strip->show();
-
-			calculateTiming(getMaxRemainingChange());
-		}
-
-		checkErase(strip);
-		return isDone();
-	}
-
-private:
 	uint8_t curRed = 0;
 	uint8_t curGreen = 0;
 	uint8_t curBlue = 0;
 
-	uint8_t beginRed;
-	uint8_t beginGreen;
-	uint8_t beginBlue;
+	virtual void calculateTiming() {
+		LightPattern::calculateTiming(getMaxRemainingChange());
+	}
 
-	uint8_t targetRed;
-	uint8_t targetGreen;
-	uint8_t targetBlue;
+	virtual void runIteration(Adafruit_NeoPixel* strip) {
+		fadeValue(&(curRed), targetRed, increment);
+		fadeValue(&(curGreen), targetGreen, increment);
+		fadeValue(&(curBlue), targetBlue, increment);
+
+		uint32_t color = Adafruit_NeoPixel::Color(curRed, curGreen, curBlue);
+		target->setAllColor(strip, color);
+		strip->show();
+	}
 
 	int getMaxRemainingChange() {
 		int remainingRed = abs(curRed - targetRed);
