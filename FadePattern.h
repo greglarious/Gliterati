@@ -1,10 +1,11 @@
 class FadePattern: public LightPattern {
 public:
-	FadePattern (uint8_t beginRed, uint8_t beginGreen,
+	FadePattern (LEDGroup* target, uint8_t beginRed, uint8_t beginGreen,
 				uint8_t beginBlue, uint8_t targetRed, uint8_t targetGreen,
 				uint8_t targetBlue, int increment, int waitMillis, long duration,
 				long delayAfter) {
 			params.patternId = PATTERN_ID_FADE;
+			params.target = target;
 			params.localPattern = true;
 			params.width = increment;
 			params.beginRed = beginRed;
@@ -35,7 +36,7 @@ public:
 				params.width);
 
 		uint32_t color = strip->Color(state.curRed, state.curGreen, state.curBlue);
-		LightUtil::setAllColor(strip, color);
+		params.target->setAllColor(strip, color);
 		strip->show();
 
 		int remainingRed = abs(state.curRed - params.targetRed);

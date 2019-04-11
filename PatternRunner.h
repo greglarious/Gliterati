@@ -1,7 +1,7 @@
 #include <Adafruit_NeoPXL8.h>
 #include <LightAddress.h>
-#include <LightPattern.h>
 #include <LightUtil.h>
+#include <LightPattern.h>
 
 class PatternRunner {
 public:

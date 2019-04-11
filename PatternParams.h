@@ -4,6 +4,8 @@
 #define PATTERN_ID_WIPE 4
 #define PATTERN_ID_LOOP 5
 
+#include <LEDGroup.h>
+
 class PatternParams {
 public:
 	PatternParams() {
@@ -17,6 +19,8 @@ public:
 	int width;
 	int size;
 	int numRepeat;
+
+	LEDGroup* target;
 
 	uint32_t color1;
 	int color1Idx;
