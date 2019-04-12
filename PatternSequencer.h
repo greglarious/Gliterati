@@ -18,65 +18,91 @@ public:
 	}
 
 	long lastPrint = 0;
+
+	int getPatternAfter(int targetPattern) {
+		if (targetPattern + 1 < numPatterns) {
+			return targetPattern + 1;
+		} else { // wrap around at end
+			return 0;
+		}
+	}
+
+	bool validPattern(int targetPattern) {
+		return targetPattern < numPatterns && patterns[targetPattern] != NULL;
+	}
+
+	bool patternDoneEnough(int targetPattern) {
+		return validPattern(targetPattern)
+				&& patterns[targetPattern]->getPercentDone()
+						>= (100 - overlapPercentage);
+	}
+
+	void printPercDone(int idx) {
+		int perc = patterns[idx]->getPercentDone();
+
+		if (perc % 25 == 0 && perc != lastPrint) {
+			lastPrint = perc;
+			Serial.print("pattern ");
+			Serial.print(startPattern);
+			Serial.print(" percent done: ");
+			Serial.println(perc);
+		}
+
+	}
+
+	bool startLaunchedSuccessor = false;
+
 	void run() {
 		// run all currently active patterns
-		for (int curPatternIdx = startPattern; curPatternIdx != endPattern;
-				curPatternIdx++) {
-			//Serial.print("current pattern:");
-			//Serial.print(curPatternIdx);
-			// wrap around at end
-			if (curPatternIdx >= numPatterns) {
-				curPatternIdx = 0;
-			}
+		for (int curPatternIdx = startPattern;
+				curPatternIdx != getPatternAfter(endPattern); curPatternIdx =
+						getPatternAfter(curPatternIdx)) {
 
-			if (patterns[curPatternIdx] != NULL) {
-				LightPattern* curPattern = patterns[curPatternIdx];
-				if (!curPattern->isDone()) {
-					curPattern->run(strip); // apply pattern to led strip
-				}
+			if (validPattern(curPatternIdx)
+					&& !patterns[curPatternIdx]->isDone()) {
+				//Serial.print("run pattern: ");
+				//Serial.println(curPatternIdx);
+				patterns[curPatternIdx]->run(strip); // apply pattern to led strip
 			}
 		}
 
-		if(millis() - lastPrint > 500) {
-			int perc = patterns[startPattern]->getPercentDone();
-			lastPrint = millis();
-			Serial.print("start pattern percent done: ");
-		    Serial.println(perc);
-		}
+		printPercDone(startPattern);
+
+		bool wasDoneEnough = false;
 		// check if time to start new pattern
-		if (patterns[startPattern] != NULL
-				&& patterns[startPattern]->getPercentDone()
-						>= (100 - overlapPercentage)) {
+		if (!startLaunchedSuccessor && patternDoneEnough(startPattern)) {
+			startLaunchedSuccessor = true;
+			wasDoneEnough = true;
+			printPercDone(startPattern);
+			Serial.print("pattern ");
+			Serial.print(startPattern);
+			Serial.print(" done enough");
+
 			// add a new active pattern
-			int nextPattern = endPattern+1;
+			int nextPattern = getPatternAfter(endPattern);
 
-			// wrap around at end
-			if (nextPattern > numPatterns) {
-				nextPattern = 1;
+			if (validPattern(nextPattern)) {
+				Serial.print(" starting new pattern ");
+				Serial.println(nextPattern);
+				endPattern = nextPattern;
+				// prepare the new pattern to run
+				patterns[endPattern]->reset();
 			}
-
-			Serial.print("proposed new pattern: ");
-			Serial.print(nextPattern-1);
-			Serial.print(" num patterns: ");
-			Serial.println(numPatterns);
-
-				if (patterns[nextPattern-1] != NULL) {
-					Serial.print("starting new pattern ");
-					Serial.println(nextPattern-1);
-					endPattern = nextPattern;
-					// prepare the new pattern to run
-					patterns[endPattern-1]->reset();
-				}
 		}
+
 
 		// check for finished starting patterns
 		if (patterns[startPattern]->isDone()) {
 			Serial.print("stopping old pattern: ");
 			Serial.println(startPattern);
 			// move past finished pattern
-			startPattern++;
-			if (startPattern >= numPatterns) {
-				startPattern = 0;
+			startPattern = getPatternAfter(startPattern);
+			startLaunchedSuccessor = false;
+
+		} else {
+			if (wasDoneEnough) {
+				Serial.print(" start time remaimning: ");
+				Serial.println(patterns[startPattern]->timeRemaining());
 			}
 		}
 	}
@@ -93,7 +119,7 @@ private:
 	int numPatterns = 0;
 
 	int startPattern = 0;
-	int endPattern = 1;
+	int endPattern = 0;
 	int overlapPercentage = 0;
 
 };

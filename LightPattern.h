@@ -2,8 +2,10 @@
 
 class LightPattern {
 public:
-	LightPattern(PixelGroup* target, long duration, long delayAfter, bool eraseWhenDone=false) :
-			target(target), duration(duration), delayAfter(delayAfter), eraseWhenDone(eraseWhenDone) {
+	LightPattern(PixelGroup* target, long duration, long delayAfter,
+			bool eraseWhenDone = false) :
+			target(target), duration(duration), delayAfter(delayAfter), eraseWhenDone(
+					eraseWhenDone) {
 	}
 
 	virtual bool run(Adafruit_NeoPXL8* strip) {
@@ -22,26 +24,37 @@ public:
 	bool isDone() {
 		//Serial.print("timeRemaining:");
 		//Serial.print(timeRemaining());
-		return timeRemaining() == 0; }
+		return timeRemaining() == 0;
+	}
 
 	void checkErase(Adafruit_NeoPXL8* strip) {
 		if (eraseWhenDone && isDone() && !didErase) {
-			didErase=true;
-                        Serial.println("erase");
+			didErase = true;
+			Serial.println("erase");
 			target->erase(strip);
 		}
 	}
 
+	int lastPrint = 0;
+
 	int getPercentDone() {
 		if (patternStart > 0) {
-                //Serial.print("timeRemaining:");
-		//Serial.print(timeRemaining());
-                //Serial.print(" duration:");
-		//Serial.print(duration + delayAfter);
-			int rval = 100 - (((float) timeRemaining() / (duration + delayAfter)) * 100);
-                //Serial.print(" percent:");
-		//Serial.println(rval);
-                        return rval;
+			float totalTime = duration + delayAfter;
+			float percentLeft = timeRemaining() / totalTime * 100.0;
+			int rval = 100 - floor(percentLeft);
+
+			if (rval != lastPrint) {
+				lastPrint = rval;
+				/*
+			Serial.print("timeRemaining:");
+			Serial.print(timeRemaining());
+			Serial.print(" duration:");
+			Serial.print(duration + delayAfter);
+			Serial.print(" percent:");
+			Serial.println(rval);
+			*/
+			}
+			return rval;
 		} else {
 			return 0;
 		}
@@ -53,6 +66,9 @@ public:
 		didErase = false;
 	}
 
+	long timeRemaining() {
+		return max(0, (duration + delayAfter) - patternTime());
+	}
 protected:
 	PixelGroup* target;
 	const bool eraseWhenDone = false;
@@ -90,10 +106,6 @@ protected:
 		return max(0, duration - patternTime());
 	}
 
-	long timeRemaining() {
-		return max(0, (duration + delayAfter) - patternTime());
-	}
-
 	long iterationTime() {
 		return micros() - iterationStartMicros;
 	}
@@ -103,34 +115,34 @@ protected:
 		long remainingTime = actionTimeRemaining();
 
 		long maxIterationsLeft = (remainingTime * 1000) / iterationTime();
-                //Serial.print(" iterations left:");
+		//Serial.print(" iterations left:");
 		//Serial.println(maxIterationsLeft);
 
 		if (maxIterationsLeft >= remainingChange) {
 			// plenty of iterations left, slow down and add delay
 			increment = 1;
-                        if (remainingTime == 0 || remainingChange == 0) {
-                            iterationDelayTime = 0;
-                        } else {
-			    iterationDelayTime = millis() + remainingTime / remainingChange;
-                        }
+			if (remainingTime == 0 || remainingChange == 0) {
+				iterationDelayTime = 0;
+			} else {
+				iterationDelayTime = millis() + remainingTime / remainingChange;
+			}
 		} else {
 			// cant iterate fast enough, no delay and have to increment > 1
 			increment = remainingChange / maxIterationsLeft;
 			iterationDelayTime = 0;
 		}
 		/*
-                Serial.print("remaining change:");
-                Serial.print(remainingChange);
-                Serial.print(" remaining time:");
-		Serial.print(remainingTime);
-                Serial.print(" cur time:");
-		Serial.print(millis());
-                Serial.print(" iterationDelay:");
-		Serial.print(iterationDelayTime);
-                Serial.print(" increment:");
-		Serial.println(increment);
-		*/
+		 Serial.print("remaining change:");
+		 Serial.print(remainingChange);
+		 Serial.print(" remaining time:");
+		 Serial.print(remainingTime);
+		 Serial.print(" cur time:");
+		 Serial.print(millis());
+		 Serial.print(" iterationDelay:");
+		 Serial.print(iterationDelayTime);
+		 Serial.print(" increment:");
+		 Serial.println(increment);
+		 */
 	}
 
 	// calculates timing solely on duration
