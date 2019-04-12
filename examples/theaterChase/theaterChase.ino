@@ -7,15 +7,16 @@ NthPixelGroup three_0(3, 0);
 NthPixelGroup three_1(3, 1);
 NthPixelGroup three_2(3, 2);
 
-int intensity = 60;
-int duration = 1000;
-int overlap = 50;
-FadePattern fadeIn0(&three_0,  0,0,0,         0,0,intensity, duration, 0, 0);
-FadePattern fadeOut0(&three_0, 0,0,intensity, 0,0,0,         duration, 0, overlap);
-FadePattern fadeIn1(&three_1,  0,0,0,         0,0,intensity, duration, 0, 0);
-FadePattern fadeOut1(&three_1, 0,0,intensity, 0,0,0,         duration, 0, overlap);
-FadePattern fadeIn2(&three_2,  0,0,0,         0,0,intensity, duration, 0, 0);
-FadePattern fadeOut2(&three_2, 0,0,intensity, 0,0,0,         duration, 0, overlap);
+int intensity = 250;
+int duration = 900;
+int delayAfter = 10;
+int overlap = 100;
+FadePattern fadeIn0(&three_0,  0,0,0,         0,0,intensity, duration, delayAfter, 0);
+FadePattern fadeOut0(&three_0, 0,0,intensity, 0,0,0,         duration, delayAfter, overlap);
+FadePattern fadeIn1(&three_1,  0,0,0,         0,0,intensity, duration, delayAfter, 0);
+FadePattern fadeOut1(&three_1, 0,0,intensity, 0,0,0,         duration, delayAfter, overlap);
+FadePattern fadeIn2(&three_2,  0,0,0,         0,0,intensity, duration, delayAfter, 0);
+FadePattern fadeOut2(&three_2, 0,0,intensity, 0,0,0,         duration, delayAfter, overlap);
 
 void setup() {
   strip.begin();

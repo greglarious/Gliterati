@@ -43,16 +43,17 @@ public:
 			float percentUsed = patternTime() / totalTime * 100.0;
 			int rval = floor(percentUsed);
 
-			/*
+
 			if (rval != lastPrint) {
 				lastPrint = rval;
-				 Serial.print("timeRemaining:");
-				 Serial.print(timeRemaining());
-				 Serial.print(" duration:");
-				 Serial.print(duration + delayAfter);
+				/*
+				 Serial.print("totalTime:");
+				 Serial.print(totalTime);
+				 Serial.print(" patterntime:");
+				 Serial.print(patternTime());
 				 Serial.print(" percent:");
-				 Serial.println(rval);
-			}*/
+				 Serial.println(rval);*/
+			}
 			return rval;
 		} else {
 			return 0;
@@ -70,6 +71,8 @@ public:
 	}
 
 	const int overlapPercentage = 0;
+
+	long getPatternStart() { return patternStart; }
 protected:
 	PixelGroup* target;
 	const bool eraseWhenDone = false;
