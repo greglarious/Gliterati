@@ -34,7 +34,7 @@ public:
 	bool patternDoneEnough(int targetPattern) {
 		return validPattern(targetPattern)
 				&& patterns[targetPattern]->getPercentDone()
-						>= (100 - overlapPercentage);
+						>= (100 - patterns[targetPattern]->overlapPercentage);
 	}
 
 	void printPercDone(int idx) {
@@ -101,7 +101,7 @@ public:
 
 		} else {
 			if (wasDoneEnough) {
-				Serial.print(" start time remaimning: ");
+				Serial.print(" start time remaining: ");
 				Serial.println(patterns[startPattern]->timeRemaining());
 			}
 		}
@@ -120,6 +120,4 @@ private:
 
 	int startPattern = 0;
 	int endPattern = 0;
-	int overlapPercentage = 0;
-
 };

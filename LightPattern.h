@@ -3,9 +3,9 @@
 class LightPattern {
 public:
 	LightPattern(PixelGroup* target, long duration, long delayAfter,
-			bool eraseWhenDone = false) :
-			target(target), duration(duration), delayAfter(delayAfter), eraseWhenDone(
-					eraseWhenDone) {
+			long overlapPercentage, bool eraseWhenDone = false) :
+			target(target), duration(duration), delayAfter(delayAfter), overlapPercentage(
+					overlapPercentage), eraseWhenDone(eraseWhenDone) {
 	}
 
 	virtual bool run(Adafruit_NeoPXL8* strip) {
@@ -40,20 +40,19 @@ public:
 	int getPercentDone() {
 		if (patternStart > 0) {
 			float totalTime = duration + delayAfter;
-			float percentLeft = timeRemaining() / totalTime * 100.0;
-			int rval = 100 - floor(percentLeft);
+			float percentUsed = patternTime() / totalTime * 100.0;
+			int rval = floor(percentUsed);
 
+			/*
 			if (rval != lastPrint) {
 				lastPrint = rval;
-				/*
-			Serial.print("timeRemaining:");
-			Serial.print(timeRemaining());
-			Serial.print(" duration:");
-			Serial.print(duration + delayAfter);
-			Serial.print(" percent:");
-			Serial.println(rval);
-			*/
-			}
+				 Serial.print("timeRemaining:");
+				 Serial.print(timeRemaining());
+				 Serial.print(" duration:");
+				 Serial.print(duration + delayAfter);
+				 Serial.print(" percent:");
+				 Serial.println(rval);
+			}*/
 			return rval;
 		} else {
 			return 0;
@@ -69,6 +68,8 @@ public:
 	long timeRemaining() {
 		return max(0, (duration + delayAfter) - patternTime());
 	}
+
+	const int overlapPercentage = 0;
 protected:
 	PixelGroup* target;
 	const bool eraseWhenDone = false;
@@ -103,7 +104,7 @@ protected:
 	}
 
 	long actionTimeRemaining() {
-		return max(0, duration - patternTime());
+		return max(0, (duration - patternTime()));
 	}
 
 	long iterationTime() {
@@ -131,18 +132,6 @@ protected:
 			increment = remainingChange / maxIterationsLeft;
 			iterationDelayTime = 0;
 		}
-		/*
-		 Serial.print("remaining change:");
-		 Serial.print(remainingChange);
-		 Serial.print(" remaining time:");
-		 Serial.print(remainingTime);
-		 Serial.print(" cur time:");
-		 Serial.print(millis());
-		 Serial.print(" iterationDelay:");
-		 Serial.print(iterationDelayTime);
-		 Serial.print(" increment:");
-		 Serial.println(increment);
-		 */
 	}
 
 	// calculates timing solely on duration

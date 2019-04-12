@@ -1,8 +1,8 @@
 class RandomPattern: public LightPattern {
 public:
 	RandomPattern(PixelGroup* target, bool localPattern, int width, int size, int waitMillis,
-			long duration) :
-			LightPattern(target, duration, 0, true), localPattern(localPattern), width(width), size(
+			long duration, long delayAfter) :
+			LightPattern(target, duration, delayAfter, 0, true), localPattern(localPattern), width(width), size(
 					size), waitMillis(waitMillis) {
 	}
 

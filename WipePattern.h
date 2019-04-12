@@ -2,7 +2,7 @@ class WipePattern: public LightPattern {
 	WipePattern(PixelGroup* target, bool localPattern, bool isLeft, int width,
 			uint32_t color1, int color1Idx, uint32_t color2, int color2Idx,
 			uint32_t color3, int color3Idx, long duration, long delayAfter) :
-			LightPattern(target, duration, delayAfter), localPattern(
+			LightPattern(target, duration, delayAfter, 0), localPattern(
 					localPattern), isLeft(isLeft), width(width), color1(color1), color1Idx(
 					color1Idx), color2(color2), color2Idx(color2Idx), color3(
 					color3), color3Idx(color3Idx) {
