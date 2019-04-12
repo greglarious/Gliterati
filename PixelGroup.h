@@ -111,6 +111,6 @@ protected:
 	int order = 0;
 
 	bool applies(int idx) {
-		return (idx / size) == order;
+		return (idx % size) == order;
 	}
 };

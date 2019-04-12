@@ -5,15 +5,15 @@ Adafruit_NeoPXL8 strip(93, pins, NEO_BRG);
 PatternSequencer runner(&strip);
 AllPixelGroup all;
 
-int intensity = 30;
-FadePattern blueToRed(&all, 0,0,intensity,  0,intensity,0, 0, 2000);
-FadePattern redToBlue(&all, 0,intensity,0,  0,0,intensity, 0, 2000);
+int intensity = 60;
+FadePattern blueToGreen(&all, 0,0,intensity,  0,intensity,0, 300, 500);
+FadePattern greenToBlue(&all, 0,intensity,0,  0,0,intensity, 300, 500);
 
 void setup() {
   strip.begin();
 
-  runner.addPattern(&blueToRed);
-  runner.addPattern(&redToBlue);
+  runner.addPattern(&blueToGreen);
+  runner.addPattern(&greenToBlue);
 
   delay(2000);
   Serial.begin(115200);

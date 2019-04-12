@@ -32,6 +32,11 @@ public:
 	}
 
 	bool patternDoneEnough(int targetPattern) {
+		Serial.print("done perc:");
+				Serial.println(patterns[targetPattern]->getPercentDone());
+		Serial.print("overlap perc:");
+		Serial.println(patterns[targetPattern]->overlapPercentage);
+
 		return validPattern(targetPattern)
 				&& patterns[targetPattern]->getPercentDone()
 						>= (100 - patterns[targetPattern]->overlapPercentage);
