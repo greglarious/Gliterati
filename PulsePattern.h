@@ -39,7 +39,7 @@ private:
 	/**
 	 * animates a color appearing from center to outside or outside to center
 	 */
-	void runIteration(Adafruit_NeoPixel* strip) {
+	void runIteration(Adafruit_NeoPXL8* strip) {
 		if (idx <= centerPos) {
 			int leftPos = 0;
 			int rightPos = 0;

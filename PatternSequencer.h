@@ -3,7 +3,7 @@
 
 class PatternSequencer {
 public:
-	PatternSequencer(Adafruit_NeoPixel* strip) :
+	PatternSequencer(Adafruit_NeoPXL8* strip) :
 			strip(strip) {
 	}
 
@@ -17,11 +17,13 @@ public:
 		numPatterns = 0;
 	}
 
+	long lastPrint = 0;
 	void run() {
-		int firstActivePattern = -1;
-
 		// run all currently active patterns
-		for (int curPatternIdx = startPattern; curPatternIdx != endPattern; curPatternIdx++) {
+		for (int curPatternIdx = startPattern; curPatternIdx != endPattern;
+				curPatternIdx++) {
+			//Serial.print("current pattern:");
+			//Serial.print(curPatternIdx);
 			// wrap around at end
 			if (curPatternIdx >= numPatterns) {
 				curPatternIdx = 0;
@@ -31,35 +33,51 @@ public:
 				LightPattern* curPattern = patterns[curPatternIdx];
 				if (!curPattern->isDone()) {
 					curPattern->run(strip); // apply pattern to led strip
-
-					// track first active pattern that is still active
-					if (firstActivePattern < 0)
-						firstActivePattern = curPatternIdx;
 				}
 			}
 		}
 
-		// check if time to start new pattern
-		if (patterns[startPattern]->getPercentDone() >= (100 - overlapPercentage) ) {
-
+		if(millis() - lastPrint > 500) {
+			int perc = patterns[startPattern]->getPercentDone();
+			lastPrint = millis();
+			Serial.print("start pattern percent done: ");
+		    Serial.println(perc);
 		}
-		// if a beginning pattern has finished
-		// TODO: switch to a percentage overlap
-		if (firstActivePattern >= 0 && startPattern != firstActivePattern) {
-
-			// move past finished pattern
-			startPattern = firstActivePattern;
-
+		// check if time to start new pattern
+		if (patterns[startPattern] != NULL
+				&& patterns[startPattern]->getPercentDone()
+						>= (100 - overlapPercentage)) {
 			// add a new active pattern
-			endPattern++;
+			int nextPattern = endPattern+1;
 
 			// wrap around at end
-			if (endPattern >= numPatterns) {
-				endPattern = 0;
+			if (nextPattern > numPatterns) {
+				nextPattern = 1;
 			}
 
-			// prepare the new pattern to run
-			patterns[endPattern]->reset();
+			Serial.print("proposed new pattern: ");
+			Serial.print(nextPattern-1);
+			Serial.print(" num patterns: ");
+			Serial.println(numPatterns);
+
+				if (patterns[nextPattern-1] != NULL) {
+					Serial.print("starting new pattern ");
+					Serial.println(nextPattern-1);
+					endPattern = nextPattern;
+					// prepare the new pattern to run
+					patterns[endPattern-1]->reset();
+				}
+		}
+
+		// check for finished starting patterns
+		if (patterns[startPattern]->isDone()) {
+			Serial.print("stopping old pattern: ");
+			Serial.println(startPattern);
+			// move past finished pattern
+			startPattern++;
+			if (startPattern >= numPatterns) {
+				startPattern = 0;
+			}
 		}
 	}
 
@@ -70,12 +88,12 @@ public:
 	}
 
 private:
-	Adafruit_NeoPixel* strip;
+	Adafruit_NeoPXL8* strip;
 	LightPattern* patterns[10];
 	int numPatterns = 0;
 
 	int startPattern = 0;
-	int endPattern = 0;
+	int endPattern = 1;
 	int overlapPercentage = 0;
 
 };

@@ -7,9 +7,9 @@ public:
 	PixelGroup() {
 	}
 
-	virtual void setAllColor(Adafruit_NeoPixel* strip, uint32_t color) = 0;
+	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) = 0;
 
-	virtual void erase(Adafruit_NeoPixel* strip) = 0;
+	virtual void erase(Adafruit_NeoPXL8* strip) = 0;
 };
 
 class SegmentPixelGroup: public PixelGroup {
@@ -17,13 +17,13 @@ public:
 	SegmentPixelGroup(int start, int end) :
 			start(start), end(end) {
 	}
-	virtual void setAllColor(Adafruit_NeoPixel* strip, uint32_t color) {
+	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) {
 		for (int idx = start; idx < end; idx++) {
 			strip->setPixelColor(idx, color);
 		}
 	}
 
-	virtual void erase(Adafruit_NeoPixel* strip) {
+	virtual void erase(Adafruit_NeoPXL8* strip) {
 		for (int idx = start; idx < end; idx++) {
 			strip->setPixelColor(idx, black);
 		}
@@ -36,11 +36,11 @@ protected:
 
 class AllPixelGroup: public PixelGroup {
 public:
-	virtual void setAllColor(Adafruit_NeoPixel* strip, uint32_t color) {
+	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) {
 		LightUtil::setAllColor(strip, color);
 	}
 
-	virtual void erase(Adafruit_NeoPixel* strip) {
+	virtual void erase(Adafruit_NeoPXL8* strip) {
 		LightUtil::setAllColor(strip, black);
 	}
 };
@@ -55,13 +55,13 @@ public:
 		groupSize = 0;
 	}
 
-	virtual void setAllColor(Adafruit_NeoPixel* strip, uint32_t color) {
+	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) {
 		for (int idx = 0; idx < groupSize; idx++) {
 			strip->setPixelColor(indexes[idx], color);
 		}
 	}
 
-	virtual void erase(Adafruit_NeoPixel* strip) {
+	virtual void erase(Adafruit_NeoPXL8* strip) {
 		for (int idx = 0; idx < groupSize; idx++) {
 			strip->setPixelColor(indexes[idx], black);
 		}
@@ -93,14 +93,14 @@ public:
 	NthPixelGroup(int size, int order) :
 			size(size), order(order) {
 	}
-	virtual void setAllColor(Adafruit_NeoPixel* strip, uint32_t color) {
+	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) {
 		for (int idx = 0; idx < LightAddress::NUM_PIXELS; idx++) {
 			if (applies(idx))
 				strip->setPixelColor(idx, color);
 		}
 	}
 
-	virtual void erase(Adafruit_NeoPixel* strip) {
+	virtual void erase(Adafruit_NeoPXL8* strip) {
 		for (int idx = 0; idx < LightAddress::NUM_PIXELS; idx++) {
 			if (applies(idx))
 				strip->setPixelColor(idx, black);

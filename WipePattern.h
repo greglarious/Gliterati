@@ -35,7 +35,7 @@ protected:
 	/**
 	 * animates a color appearing from left to right or right to left
 	 */
-	void runIteration(Adafruit_NeoPixel* strip) {
+	void runIteration(Adafruit_NeoPXL8* strip) {
 		if (idx < width) {
 			int idx = 0;
 			if (isLeft) {

@@ -6,7 +6,7 @@ public:
 			target(target), duration(duration), delayAfter(delayAfter), eraseWhenDone(eraseWhenDone) {
 	}
 
-	virtual bool run(Adafruit_NeoPixel* strip) {
+	virtual bool run(Adafruit_NeoPXL8* strip) {
 		if (millis() < iterationDelayTime) {
 			// do nothing, waiting until end of iteration
 		} else {
@@ -19,18 +19,29 @@ public:
 		return isDone();
 	}
 
-	bool isDone() { return getPercentDone() >= 100; }
+	bool isDone() {
+		//Serial.print("timeRemaining:");
+		//Serial.print(timeRemaining());
+		return timeRemaining() == 0; }
 
-	void checkErase(Adafruit_NeoPixel* strip) {
-		if (isDone() && eraseWhenDone && !didErase) {
+	void checkErase(Adafruit_NeoPXL8* strip) {
+		if (eraseWhenDone && isDone() && !didErase) {
 			didErase=true;
+                        Serial.println("erase");
 			target->erase(strip);
 		}
 	}
 
 	int getPercentDone() {
 		if (patternStart > 0) {
-			return 100 - ((float) timeRemaining() / (duration + delayAfter));
+                //Serial.print("timeRemaining:");
+		//Serial.print(timeRemaining());
+                //Serial.print(" duration:");
+		//Serial.print(duration + delayAfter);
+			int rval = 100 - (((float) timeRemaining() / (duration + delayAfter)) * 100);
+                //Serial.print(" percent:");
+		//Serial.println(rval);
+                        return rval;
 		} else {
 			return 0;
 		}
@@ -57,7 +68,7 @@ protected:
 	int iterationCount = 0;
 
 	virtual void calculateTiming() = 0;
-	virtual void runIteration(Adafruit_NeoPixel* strip) = 0;
+	virtual void runIteration(Adafruit_NeoPXL8* strip) = 0;
 
 	void startIteration() {
 		iterationStartMicros = micros();
@@ -92,16 +103,34 @@ protected:
 		long remainingTime = actionTimeRemaining();
 
 		long maxIterationsLeft = (remainingTime * 1000) / iterationTime();
+                //Serial.print(" iterations left:");
+		//Serial.println(maxIterationsLeft);
 
 		if (maxIterationsLeft >= remainingChange) {
 			// plenty of iterations left, slow down and add delay
 			increment = 1;
-			iterationDelayTime = millis() + remainingTime / remainingChange;
+                        if (remainingTime == 0 || remainingChange == 0) {
+                            iterationDelayTime = 0;
+                        } else {
+			    iterationDelayTime = millis() + remainingTime / remainingChange;
+                        }
 		} else {
 			// cant iterate fast enough, no delay and have to increment > 1
 			increment = remainingChange / maxIterationsLeft;
 			iterationDelayTime = 0;
 		}
+		/*
+                Serial.print("remaining change:");
+                Serial.print(remainingChange);
+                Serial.print(" remaining time:");
+		Serial.print(remainingTime);
+                Serial.print(" cur time:");
+		Serial.print(millis());
+                Serial.print(" iterationDelay:");
+		Serial.print(iterationDelayTime);
+                Serial.print(" increment:");
+		Serial.println(increment);
+		*/
 	}
 
 	// calculates timing solely on duration

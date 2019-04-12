@@ -32,7 +32,7 @@ protected:
 		LightPattern::calculateTiming(getMaxRemainingChange());
 	}
 
-	virtual void runIteration(Adafruit_NeoPixel* strip) {
+	virtual void runIteration(Adafruit_NeoPXL8* strip) {
 		fadeValue(&(curRed), targetRed, increment);
 		fadeValue(&(curGreen), targetGreen, increment);
 		fadeValue(&(curBlue), targetBlue, increment);

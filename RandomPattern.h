@@ -16,7 +16,7 @@ protected:
 		calculateTimingDelay(waitMillis);
 	}
 
-	void runIteration(Adafruit_NeoPixel* strip) {
+	void runIteration(Adafruit_NeoPXL8* strip) {
 		uint32_t color;
 		if (millis() < (patternStart + duration)) {
 			for (int idx = 0; idx < width; idx++) {
