@@ -3,10 +3,10 @@ public:
 	FadePattern(PixelGroup* target, uint8_t beginRed, uint8_t beginGreen,
 			uint8_t beginBlue, uint8_t targetRed, uint8_t targetGreen,
 			uint8_t targetBlue, long duration, long delayAfter,
-			int overlapTime = 0) :
+			int overlapTime, bool doRoundTrip) :
 			LightPattern(target, duration, delayAfter, overlapTime), beginRed(
 					beginRed), beginGreen(beginGreen), beginBlue(beginBlue), targetRed(
-					targetRed), targetGreen(targetGreen), targetBlue(targetBlue) {
+					targetRed), targetGreen(targetGreen), targetBlue(targetBlue), doRoundTrip(doRoundTrip){
 	}
 
 	virtual void reset() {
@@ -14,6 +14,7 @@ public:
 		curRed = beginRed;
 		curGreen = beginGreen;
 		curBlue = beginBlue;
+		returningToBegin = false;
 	}
 
 protected:
