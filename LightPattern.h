@@ -3,9 +3,9 @@
 class LightPattern {
 public:
 	LightPattern(PixelGroup* target, long duration, long delayAfter,
-			long overlapPercentage, bool eraseWhenDone = false) :
-			target(target), duration(duration), delayAfter(delayAfter), overlapPercentage(
-					overlapPercentage), eraseWhenDone(eraseWhenDone) {
+			long overlapTime, bool eraseWhenDone = false) :
+			target(target), duration(duration), delayAfter(delayAfter), overlapTime(
+					overlapTime), eraseWhenDone(eraseWhenDone) {
 	}
 
 	virtual bool run(Adafruit_NeoPXL8* strip) {
@@ -35,49 +35,29 @@ public:
 		}
 	}
 
-	int lastPrint = 0;
-
-	int getPercentDone() {
-		if (patternStart > 0) {
-			float totalTime = duration + delayAfter;
-			float percentUsed = patternTime() / totalTime * 100.0;
-			int rval = floor(percentUsed);
-
-
-			if (rval != lastPrint) {
-				lastPrint = rval;
-				/*
-				 Serial.print("totalTime:");
-				 Serial.print(totalTime);
-				 Serial.print(" patterntime:");
-				 Serial.print(patternTime());
-				 Serial.print(" percent:");
-				 Serial.println(rval);*/
-			}
-			return rval;
-		} else {
-			return 0;
-		}
-	}
-
 	virtual void reset() {
 		patternStart = 0;
 		iterationCount = 0;
 		didErase = false;
 	}
 
+	long totalTime() { return duration + delayAfter; }
 	long timeRemaining() {
-		return max(0, (duration + delayAfter) - patternTime());
+		return max(0, totalTime() - timeSpent());
 	}
 
-	const int overlapPercentage = 0;
-
 	long getPatternStart() { return patternStart; }
+
+	bool allowNextPattern() {
+		return timeRemaining() <= overlapTime;
+	}
+
 protected:
 	PixelGroup* target;
 	const bool eraseWhenDone = false;
 	const long duration = 0;
 	const long delayAfter = 0;
+	const long overlapTime = 0;
 
 	bool didErase = false;
 	long patternStart = 0;
@@ -98,7 +78,7 @@ protected:
 		}
 	}
 
-	long patternTime() {
+	long timeSpent() {
 		if (patternStart > 0) {
 			return millis() - patternStart;
 		} else {
@@ -107,7 +87,7 @@ protected:
 	}
 
 	long actionTimeRemaining() {
-		return max(0, (duration - patternTime()));
+		return max(0, (duration - timeSpent()));
 	}
 
 	long iterationTime() {

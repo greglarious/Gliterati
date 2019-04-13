@@ -12,6 +12,10 @@ public:
 		numPatterns++;
 	}
 
+	void setPrestart(const int numPrestart) {
+		this->numPrestart = numPrestart;
+	}
+
 	void clearPatterns() {
 		// clear out patterns and wait for new ones
 		numPatterns = 0;
@@ -33,44 +37,6 @@ public:
 		return rval;
 	}
 
-	bool patternDoneEnough(int targetPattern) {
-
-		int targetPerc = 99 - patterns[targetPattern]->overlapPercentage;
-		int donePerc = patterns[targetPattern]->getPercentDone();
-		bool rval = validPattern(targetPattern) && donePerc >= targetPerc;
-
-		if (false && patterns[targetPattern]->getPercentDone() > 98) {
-		 Serial.print("calc donenough:");
-		 Serial.print(rval);
-		 Serial.print(" targetPerc:");
-		 Serial.print(targetPerc);
-		 Serial.print(" pattern:");
-		 Serial.print(targetPattern);
-		 Serial.print(" done perc:");
-		 Serial.print(donePerc);
-		 Serial.print(" overlap perc:");
-		 Serial.println(patterns[targetPattern]->overlapPercentage);
-		}
-
-		return rval;
-	}
-
-	void printPercDone(int idx) {
-		int perc = patterns[idx]->getPercentDone();
-
-		if (false && perc % 50 == 0 && perc != lastPrint) {
-			lastPrint = perc;
-			Serial.print("pattern ");
-			Serial.print(startPattern);
-			Serial.print(" percent done: ");
-			Serial.println(perc);
-		}
-
-	}
-
-	bool startLaunchedSuccessor = false;
-
-	bool reportNoRun = false;
 	void run() {
 		// run all currently active patterns
 		int numPatternsRun = 0;
@@ -106,30 +72,22 @@ public:
 			Serial.println(endPattern);
 		}
 
-		printPercDone(startPattern);
-
-		bool startDoneEnough =  patternDoneEnough(startPattern);
+		bool allowNextPattern =  patterns[startPattern]->allowNextPattern();
 		bool startDone =  patterns[startPattern]->isDone();
 
-
-		if (!startDoneEnough && startDone) {
+		if (!allowNextPattern && startDone) {
 			Serial.print("mismatch pattern:");
 			Serial.print(startPattern);
-			Serial.print(" startDoneEnough:");
-			Serial.print(startDoneEnough);
+			Serial.print(" allowNextPattern:");
+			Serial.print(allowNextPattern);
 			Serial.print(" startDone:");
-			Serial.print(startDone);
-			Serial.print(" percentDone:");
-			Serial.print(patterns[startPattern]->getPercentDone());
-			Serial.print(" overlapPercentage:");
-			Serial.println(patterns[startPattern]->overlapPercentage);
+			Serial.println(startDone);
 		}
 		bool wasDoneEnough = false;
 		// check if time to start new pattern
-		if (!startLaunchedSuccessor && startDoneEnough) {
+		if (!startLaunchedSuccessor && allowNextPattern) {
 			startLaunchedSuccessor = true;
 			wasDoneEnough = true;
-			printPercDone(startPattern);
 			Serial.print("pattern ");
 			Serial.print(startPattern);
 			Serial.print(" done enough");
@@ -180,4 +138,8 @@ private:
 
 	int startPattern = 0;
 	int endPattern = 0;
+
+	bool startLaunchedSuccessor = false;
+	bool reportNoRun = false;
+	int  numPrestart = 0;
 };
