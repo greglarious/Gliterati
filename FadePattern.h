@@ -5,22 +5,27 @@ public:
 	FadePattern(PixelGroup* target, G_Color* beginColor, G_Color* targetColor, long duration, long delayAfter,
 			int overlapTime, bool doRoundTrip) :
 			LightPattern(target, duration, delayAfter, overlapTime), beginColor(
-					beginColor), targetColor(targetColor), doRoundTrip(doRoundTrip){
+					beginColor), targetColor(targetColor), doRoundTrip(doRoundTrip), curColor(0,0,0){
 	}
 
 	virtual void reset() {
 		LightPattern::reset();
-		curColor->setTo(beginColor);
+		curColor.setTo(beginColor);
 		returningToBegin = false;
 	}
 
+	virtual void patternFinished() {
+		LightPattern::patternFinished();
+		beginColor->patternDone();
+		targetColor->patternDone();
+	}
 protected:
 	G_Color* beginColor;
 	G_Color* targetColor;
 
 	const bool doRoundTrip = false;
 
-	G_Color* curColor;
+	G_Color curColor;
 
 	bool returningToBegin = false;
 
@@ -28,50 +33,44 @@ protected:
 		LightPattern::calculateTiming(getMaxRemainingChange());
 	}
 
-	bool atTarget() {
-		return curColor->equals(targetColor);
-	}
-
 	virtual void runIteration(Adafruit_NeoPXL8* strip) {
 		if (!returningToBegin) {
 			if (actionTimeRemaining() > 10) {
-				curColor->fadeTo(targetColor, increment);
+				curColor.fadeTo(targetColor, increment);
 			} else {
-				// no more time to iterate, just go to target values\
-				curColor->setTo(target);
+				// no more time to iterate, just go to target values
+				curColor.setTo(targetColor);
 			}
 
-			if (doRoundTrip && atTarget()) {
+			if (doRoundTrip && curColor.equals(targetColor)) {
 				returningToBegin = true;
 			}
 		} else {
 			if (actionTimeRemaining() > 10) {
-				curColor->fadeTo(beginColor, increment);
+				curColor.fadeTo(beginColor, increment);
 			} else {
 				// no more time to iterate, just go to begin values
-				curColor->setTo(beginColor);
+				curColor.setTo(beginColor);
 			}
 		}
 
-		uint32_t color = Adafruit_NeoPixel::Color(curColor->red, curColor->green, curColor->blue);
-		target->setAllColor(strip, color);
+		target->setAllColor(strip, curColor.getColor());
 		strip->show();
-	}
-
-	int remainingBlue() {
-
+		beginColor->iterationDone();
+		targetColor->iterationDone();
 	}
 
 	int getMaxRemainingChange() {
+		int rval;
 		if (!doRoundTrip) {
-			return curColor->distanceTo(targetColor);
+			rval =  curColor.distanceTo(targetColor);
 		} else {
 			if (returningToBegin) {
-				return curColor->distanceTo(beginColor);
+				rval =  curColor.distanceTo(beginColor);
 			} else {
-				return curColor->distanceTo(targetColor) + targetColor->distanceTo(beginColor);
+				rval = curColor.distanceTo(targetColor) + targetColor->distanceTo(beginColor);
 			}
 		}
+		return rval;
 	}
 };
-

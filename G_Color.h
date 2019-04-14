@@ -1,45 +1,65 @@
 class G_Color {
 public:
-	G_Color(uint8_t red, uint8_t green, uint8_t blue): red(red), green(green), blue(blue) {
+	uint8_t redVal = 0;
+	uint8_t greenVal = 0;
+	uint8_t blueVal = 0;
+
+	G_Color(uint8_t redVal, uint8_t greenVal, uint8_t blueVal) :
+			redVal(redVal), greenVal(greenVal), blueVal(blueVal) {
 	}
 
-	uint8_t red;
-	uint8_t green;
-	uint8_t blue;
+	void iterationDone() {
+	}
 
-	void iterationDone() { }
-
-	void patternDone() { }
+	void patternDone() {
+	}
 
 	void setTo(G_Color* target) {
-		red = target->red;
-		green = target->green;
-		blue = target->blue;
+		redVal = target->redVal;
+		greenVal = target->greenVal;
+		blueVal = target->blueVal;
 	}
 
-	void fadeTo(G_Color* target, int increment) {
-		fadeValue(&red, target->red, increment);
-		fadeValue(&green, target->green, increment);
-		fadeValue(&blue, target->blue, increment);
+	void print() {
+		Serial.print(" redVal:");
+		Serial.print(redVal);
+		Serial.print(" greenVal:");
+		Serial.print(greenVal);
+		Serial.print(" blueVal:");
+		Serial.println(blueVal);
+
+	}
+	void fadeTo(G_Color* target, uint8_t increment) {
+		fadeValue(&redVal, target->redVal, increment);
+		fadeValue(&greenVal, target->greenVal, increment);
+		fadeValue(&blueVal, target->blueVal, increment);
 	}
 
 	int distanceTo(G_Color* target) {
-		return max(max(abs(green - target->green), abs(blue - target->blue)), abs(red - target->red));
+		return max(max(abs(greenVal - target->greenVal), abs(blueVal - target->blueVal)),
+				abs(redVal - target->redVal));
 	}
 
 	bool equals(G_Color* target) {
-		return red == target->red && green == target->green && blue == target->blue;
+		return redVal == target->redVal && greenVal == target->greenVal
+				&& blueVal == target->blueVal;
+	}
+
+	uint32_t getColor() {
+		uint32_t rval = Adafruit_NeoPixel::Color(redVal, greenVal, blueVal);
+		return rval;
 	}
 
 protected:
-	bool fadeValue(uint8_t* curValue, uint8_t targetValue, byte increment) {
+	bool fadeValue(uint8_t* curValue, uint8_t targetValue, uint8_t increment) {
 		bool rval = true;
 
 		if (*curValue < targetValue - increment) {
-			*curValue += increment;
+			*curValue = *curValue + increment;
+
 			rval = false;
 		} else if (*curValue > targetValue + increment) {
-			*curValue -= increment;
+			(*curValue) -= increment;
 			rval = false;
 		} else {
 			*curValue = targetValue;

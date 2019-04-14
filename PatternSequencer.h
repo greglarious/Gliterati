@@ -48,8 +48,8 @@ public:
 					&& !patterns[curPatternIdx]->isDone()) {
 
 				if (patterns[curPatternIdx]->getPatternStart() == 0) {
-					Serial.print("first run pattern:");
-					Serial.println(curPatternIdx);
+//					Serial.print("first run pattern:");
+//					Serial.println(curPatternIdx);
 				}
 				numPatternsRun++;
 				patterns[curPatternIdx]->run(strip); // apply pattern to led strip

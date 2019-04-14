@@ -52,7 +52,7 @@ public:
 		return timeRemaining() <= overlapTime;
 	}
 
-	void patternFinished() {
+	virtual void patternFinished() {
 		Serial.println("light pattern finished");
 		target->patternFinished();
 	}
