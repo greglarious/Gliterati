@@ -6,7 +6,7 @@ PatternSequencer runner(&strip);
 
 void buildChase(int chaseLength, int intensity, int duration, int delayAfter, int overlapTime) {
   for (int idx=0; idx < chaseLength; idx++) {
-    FadePattern* pattern = new FadePattern(new NthPixelGroup(CHASE_LENGTH, idx), 0,0,0, 0,0,intensity, duration, delayAfter, overlapTime, true);
+    FadePattern* pattern = new FadePattern(new NthPixelGroup(chaseLength, idx), 0,0,0, 0,0,intensity, duration, delayAfter, overlapTime, true);
     runner.addPattern(pattern);
   }
 }

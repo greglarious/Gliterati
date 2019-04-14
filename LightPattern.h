@@ -52,6 +52,11 @@ public:
 		return timeRemaining() <= overlapTime;
 	}
 
+	void patternFinished() {
+		Serial.println("light pattern finished");
+		target->patternFinished();
+	}
+
 protected:
 	PixelGroup* target;
 	const bool eraseWhenDone = false;

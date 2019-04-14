@@ -10,6 +10,9 @@ public:
 	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) = 0;
 
 	virtual void erase(Adafruit_NeoPXL8* strip) = 0;
+
+	virtual void patternFinished() {
+	}
 };
 
 class SegmentPixelGroup: public PixelGroup {
@@ -32,6 +35,47 @@ public:
 protected:
 	int start = 0;
 	int end = 0;
+};
+
+class DynamicSegmentPixelGroup: public SegmentPixelGroup {
+public:
+	DynamicSegmentPixelGroup(int start, int end, int startIncrement,
+			int endIncrement, int startMax, int endMax) :
+			SegmentPixelGroup(start, end), startIncrement(startIncrement), endIncrement(
+					endIncrement), startMax(startMax), endMax(endMax) {
+	}
+
+	virtual void patternFinished() {
+
+		start += startIncrement;
+		if (start > startMax) {
+			start = startMax;
+		}
+		if (start < 0) {
+			start = 0;
+		}
+
+		end += endIncrement;
+		if (end > endMax) {
+			end = endMax;
+		}
+		if (end < 0) {
+			end = 0;
+		}
+
+		Serial.print("in dynamic, pattern finished start:");
+		Serial.print(start);
+		Serial.print(" end:");
+		Serial.print(end);
+		Serial.print(" endIncrement:");
+		Serial.println(endIncrement);
+	}
+
+protected:
+	int startIncrement = 0;
+	int endIncrement = 0;
+	int startMax = 0;
+	int endMax = 0;
 };
 
 class AllPixelGroup: public PixelGroup {

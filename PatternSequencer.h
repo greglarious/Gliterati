@@ -41,7 +41,7 @@ public:
 		// run all currently active patterns
 		int numPatternsRun = 0;
 		for (int curPatternIdx = startPattern;
-				curPatternIdx != getPatternAfter(endPattern); curPatternIdx =
+				numPatternsRun == 0 || curPatternIdx != getPatternAfter(endPattern); curPatternIdx =
 						getPatternAfter(curPatternIdx)) {
 
 			if (validPattern(curPatternIdx)
@@ -108,8 +108,10 @@ public:
 		if (startDone) {
 			Serial.print("stopping old pattern:");
 			Serial.print(startPattern);
-			// move past finished pattern
 
+			patterns[startPattern]->patternFinished();
+
+			// move past finished pattern
 			startPattern = getPatternAfter(startPattern);
 			Serial.print(" new start:");
 			Serial.println(startPattern);
