@@ -1,21 +1,21 @@
 #include <G_Color.h>
 
-class FadePattern: public LightPattern {
+class G_FadePattern: public G_LightPattern {
 public:
-	FadePattern(PixelGroup* target, G_Color* beginColor, G_Color* targetColor, long duration, long delayAfter,
+	G_FadePattern(G_PixelGroup* target, G_Color* beginColor, G_Color* targetColor, long duration, long delayAfter,
 			int overlapTime, bool doRoundTrip) :
-			LightPattern(target, duration, delayAfter, overlapTime), beginColor(
+			G_LightPattern(target, duration, delayAfter, overlapTime), beginColor(
 					beginColor), targetColor(targetColor), doRoundTrip(doRoundTrip), curColor(0,0,0){
 	}
 
 	virtual void reset() {
-		LightPattern::reset();
+		G_LightPattern::reset();
 		curColor.setTo(beginColor);
 		returningToBegin = false;
 	}
 
 	virtual void patternFinished() {
-		LightPattern::patternFinished();
+		G_LightPattern::patternFinished();
 		beginColor->patternDone();
 		targetColor->patternDone();
 	}
@@ -30,7 +30,7 @@ protected:
 	bool returningToBegin = false;
 
 	virtual void calculateTiming() {
-		LightPattern::calculateTiming(getMaxRemainingChange());
+		G_LightPattern::calculateTiming(getMaxRemainingChange());
 	}
 
 	virtual void runIteration(Adafruit_NeoPXL8* strip) {

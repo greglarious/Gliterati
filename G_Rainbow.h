@@ -1,6 +1,6 @@
-class Rainbow: public G_Color {
+class G_Rainbow: public G_Color {
 public:
-	Rainbow(int iterationInc, int patternInc) :
+	G_Rainbow(int iterationInc, int patternInc) :
 			G_Color(0, 0, 0), iterationInc(iterationInc), patternInc(patternInc) {
 		colorWheel();
 	}

@@ -1,8 +1,8 @@
-class RandomPattern: public LightPattern {
+class G_RandomPattern: public G_LightPattern {
 public:
-	RandomPattern(PixelGroup* target, bool localPattern, int width, int size, int waitMillis,
+	G_RandomPattern(G_PixelGroup* target, bool localPattern, int width, int size, int waitMillis,
 			long duration, long delayAfter) :
-			LightPattern(target, duration, delayAfter, 0, true), localPattern(localPattern), width(width), size(
+			G_LightPattern(target, duration, delayAfter, 0, true), localPattern(localPattern), width(width), size(
 					size), waitMillis(waitMillis) {
 	}
 
@@ -21,18 +21,18 @@ protected:
 		if (millis() < (patternStart + duration)) {
 			for (int idx = 0; idx < width; idx++) {
 				if (idx % size == 0) {
-					color = LightUtil::randomDistinctiveColor(strip);
+					color = G_LightUtil::randomDistinctiveColor(strip);
 				} else if (idx % size == (size - 1)) {
 					color = black; // one black stripe between blocks
 				}
 
 				if (!localPattern) {
-					if (LightAddress::appliesHere(idx)) {
-						LightUtil::setColumnColor(strip,
-								LightAddress::fieldToController(idx), color);
+					if (G_LightAddress::appliesHere(idx)) {
+						G_LightUtil::setColumnColor(strip,
+								G_LightAddress::fieldToController(idx), color);
 					}
 				} else {
-					LightUtil::setColumnColor(strip, idx, color);
+					G_LightUtil::setColumnColor(strip, idx, color);
 				} // field vs individual
 			}
 			strip->show();

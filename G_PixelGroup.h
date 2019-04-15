@@ -1,10 +1,10 @@
-#include <LightAddress.h>
-#include <LightUtil.h>
+#include <G_LightAddress.h>
+#include <G_LightUtil.h>
 
-class PixelGroup {
+class G_PixelGroup {
 
 public:
-	PixelGroup() {
+	G_PixelGroup() {
 	}
 
 	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) = 0;
@@ -15,9 +15,9 @@ public:
 	}
 };
 
-class SegmentPixelGroup: public PixelGroup {
+class G_SegmentPixelGroup: public G_PixelGroup {
 public:
-	SegmentPixelGroup(int start, int end) :
+	G_SegmentPixelGroup(int start, int end) :
 			start(start), end(end) {
 	}
 	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) {
@@ -37,20 +37,21 @@ protected:
 	int end = 0;
 };
 
-class AllPixelGroup: public PixelGroup {
+class G_AllPixelGroup: public G_PixelGroup {
 public:
+
 	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) {
-		LightUtil::setAllColor(strip, color);
+		G_LightUtil::setAllColor(strip, color);
 	}
 
 	virtual void erase(Adafruit_NeoPXL8* strip) {
-		LightUtil::setAllColor(strip, black);
+		G_LightUtil::setAllColor(strip, black);
 	}
 };
 
-class CollectionPixelGroup: public PixelGroup {
+class G_CollectionPixelGroup: public G_PixelGroup {
 public:
-	CollectionPixelGroup() {
+	G_CollectionPixelGroup() {
 		groupSize = 0;
 	}
 
@@ -79,7 +80,7 @@ public:
 		return groupSize;
 	}
 
-	void copy(CollectionPixelGroup *grp) {
+	void copy(G_CollectionPixelGroup *grp) {
 		for (int i = 0; i < grp->getSize(); i++) {
 			indexes[i] = grp->indexes[i];
 		}
@@ -91,11 +92,12 @@ protected:
 	int groupSize;
 };
 
-class NthPixelGroup: public PixelGroup {
+class G_NthPixelGroup: public G_PixelGroup {
 public:
-	NthPixelGroup(int size, int order, int maxIndex) :
+	G_NthPixelGroup(int size, int order, int maxIndex) :
 			size(size), order(order), maxIndex(maxIndex) {
 	}
+
 	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) {
 		for (int idx = 0; idx <= maxIndex; idx++) {
 			if (applies(idx))

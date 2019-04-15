@@ -1,8 +1,8 @@
-class MovingPixelGroup: public SegmentPixelGroup {
+class G_MovingPixelGroup: public G_SegmentPixelGroup {
 public:
-	MovingPixelGroup(int start, int end, int* startList, int startListLength,
+	G_MovingPixelGroup(int start, int end, int* startList, int startListLength,
 			int* endList, int endListLength) :
-			SegmentPixelGroup(start, end), startList(startList), startListLength(
+			G_SegmentPixelGroup(start, end), startList(startList), startListLength(
 					startListLength), endList(endList), endListLength(
 					endListLength) {
 	}

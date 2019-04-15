@@ -1,9 +1,9 @@
-class ColorPalette {
+class G_ColorPalette {
 	uint32_t entries[10];
 	int numEntries;
 
 public:
-	ColorPalette() {
+	G_ColorPalette() {
 		numEntries = 0;
 	}
 

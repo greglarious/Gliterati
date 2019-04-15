@@ -1,5 +1,5 @@
 
-class LightAddress {
+class G_LightAddress {
 public:
     static const int MY_ADDRESS = 1;
     static const int NUM_PIXELS_PER_STRAND = 93;

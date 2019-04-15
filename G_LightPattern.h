@@ -1,8 +1,8 @@
-#include <PixelGroup.h>
+#include <G_PixelGroup.h>
 
-class LightPattern {
+class G_LightPattern {
 public:
-	LightPattern(PixelGroup* target, long duration, long delayAfter,
+	G_LightPattern(G_PixelGroup* target, long duration, long delayAfter,
 			long overlapTime, bool eraseWhenDone = false) :
 			target(target), duration(duration), delayAfter(delayAfter), overlapTime(
 					overlapTime), eraseWhenDone(eraseWhenDone) {
@@ -58,7 +58,7 @@ public:
 	}
 
 protected:
-	PixelGroup* target;
+	G_PixelGroup* target;
 	const bool eraseWhenDone = false;
 	const long duration = 0;
 	const long delayAfter = 0;

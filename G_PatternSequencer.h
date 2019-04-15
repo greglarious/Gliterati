@@ -1,13 +1,13 @@
 #include <Adafruit_NeoPXL8.h>
-#include <LightPattern.h>
+#include <G_LightPattern.h>
 
-class PatternSequencer {
+class G_PatternSequencer {
 public:
-	PatternSequencer(Adafruit_NeoPXL8* strip) :
+	G_PatternSequencer(Adafruit_NeoPXL8* strip) :
 			strip(strip) {
 	}
 
-	void addPattern(LightPattern* newPattern) {
+	void addPattern(G_LightPattern* newPattern) {
 		patterns[numPatterns] = newPattern;
 		numPatterns++;
 	}
@@ -129,13 +129,13 @@ public:
 
 	void stopAllPatterns() {
 		clearPatterns();
-		LightUtil::setAllColor(strip, black);
+		G_LightUtil::setAllColor(strip, black);
 		strip->show();
 	}
 
 private:
 	Adafruit_NeoPXL8* strip;
-	LightPattern* patterns[10];
+	G_LightPattern* patterns[10];
 	int numPatterns = 0;
 
 	int startPattern = 0;

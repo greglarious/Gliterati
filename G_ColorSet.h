@@ -1,6 +1,6 @@
-class ColorSet: public G_Color {
+class G_ColorSet: public G_Color {
 public:
-	ColorSet(uint8_t redVal, uint8_t greenVal, uint8_t blueVal) :
+	G_ColorSet(uint8_t redVal, uint8_t greenVal, uint8_t blueVal) :
 	G_Color(redVal, greenVal, blueVal) {
 	}
 
