@@ -12,7 +12,7 @@ Support for a group of LORA/RFM69 networked lighting controllers managed by a re
 The ideas in this repo are being actively refined as of 04/13/19. Currently in a high rate of change working to have it slightly stable by 05/01/19.
 
 ## Concepts
-### PixelGroup
+#### PixelGroup
 A set of pixels to be acted on.  Actions include setting to a color and errasing. PixelGroups are aware of the pattern iteration/completion cycle. Subclasses include:
 - AllPixelGroup: every pixel on the strand
 - SegmentPixelGroup: pixels between a start and end index
@@ -20,19 +20,19 @@ A set of pixels to be acted on.  Actions include setting to a color and errasing
 - NthPixelGroup: every X out of N pixels up to a max index
 - MovingPixelGroup: a SegmentPixelGroup where the start and end indexes move each time a pattern finishes
 
-### G_Color
+#### G_Color
 A color value with functions to fade to a different color and calculate iterations needed to fade to a particular color.  G_Colors are aware of the pattern iteration/completion cycle.
 
-### Rainbow
+#### Rainbow
 A G_Color that cycles through the rainbow on each pattern iteration or completion.
 
-### LightPattern
+#### LightPattern
 An operation performed on a pixel group.  Patterns have a start, a series of iterations, and an end.
 
-### FadePattern
+#### FadePattern
 A LightPattern that iterates from a beginning G_Color to an ending G_Color with an option to return bck to the beginning
 
-### PatternSequencer
+#### PatternSequencer
 A collection of patterns performed in seriesd from beginning to end and repeated.  Patterns may overlap.
 
 
