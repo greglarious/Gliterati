@@ -6,13 +6,17 @@ PatternSequencer runner(&strip);
 
 void buildChase(int chaseLength, int intensity, int duration, int delayAfter, int overlapTime) {
   for (int idx=0; idx < chaseLength; idx++) {
-    FadePattern* pattern = new FadePattern(new NthPixelGroup(chaseLength, idx), 0,0,0, 0,0,intensity, duration, delayAfter, overlapTime, true);
+
+    G_Color* fromColor = new G_Color(0,0,0);
+    G_Color* toColor = new G_Color(0,0,intensity);
+    PixelGroup* targetGroup = new NthPixelGroup(chaseLength, idx, 31);
+    FadePattern* pattern = new FadePattern(targetGroup, fromColor, toColor, duration, delayAfter, overlapTime, true);
     runner.addPattern(pattern);
   }
 }
 
 void setup() {
-  buildChase(4, 250, 400, 0, 150);
+  buildChase(4, 250, 100, 0, 80);
   strip.begin();  
   delay(2000);
   Serial.begin(115200);

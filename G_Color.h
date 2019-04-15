@@ -8,10 +8,10 @@ public:
 			redVal(redVal), greenVal(greenVal), blueVal(blueVal) {
 	}
 
-	void iterationDone() {
+	virtual void iterationDone() {
 	}
 
-	void patternDone() {
+	virtual void patternDone() {
 	}
 
 	void setTo(G_Color* target) {
@@ -36,7 +36,9 @@ public:
 	}
 
 	int distanceTo(G_Color* target) {
-		return max(max(abs(greenVal - target->greenVal), abs(blueVal - target->blueVal)),
+		return max(
+				max(abs(greenVal - target->greenVal),
+						abs(blueVal - target->blueVal)),
 				abs(redVal - target->redVal));
 	}
 

@@ -6,21 +6,18 @@ PatternSequencer runner(&strip);
 AllPixelGroup all;
 
 int intensity = 60;
-FadePattern blueToGreen(&all, 0,0,intensity,  0,intensity,0, 300, 500);
-FadePattern greenToBlue(&all, 0,intensity,0,  0,0,intensity, 300, 500);
+G_Color* c1 = new G_Color(0,intensity,0);
+G_Color* c2 = new G_Color(0,0,intensity);
+
+FadePattern fade(&all, c1, c2, 300, 400, 0, true);
 
 void setup() {
   strip.begin();
-
-  runner.addPattern(&blueToGreen);
-  runner.addPattern(&greenToBlue);
-
+  runner.addPattern(&fade);
   delay(2000);
   Serial.begin(115200);
-  Serial.println("done setup");
 }
 
 void loop() {
-
   runner.run();
 }
