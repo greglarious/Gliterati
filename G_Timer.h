@@ -1,24 +1,11 @@
 #ifndef G_TIMER_H
 #define G_TIMER_H
 
-class G_MicrosTimer {
-public:
-	void start() {
-		timerStart = micros();
-	}
-
-	long elapsedMicros() {
-		return micros() - timerStart;
-	}
-
-private:
-	long timerStart = micros();
-};
-
 class G_Timer {
 public:
 	void start() {
 		timerStart = millis();
+		timerStartMicros = micros();
 	}
 
 	void startIfStopped() {
@@ -33,6 +20,7 @@ public:
 
 	void reset() {
 		timerStart = 0;
+		timerStartMicros = 0;
 	}
 
 	long elapsedMillis() {
@@ -43,8 +31,13 @@ public:
 		}
 	}
 
+	long elapsedMicros() {
+		return micros() - timerStartMicros;
+	}
+
 private:
 	long timerStart = 0;
+	long timerStartMicros = 0;
 };
 
 class G_CountdownTimer {

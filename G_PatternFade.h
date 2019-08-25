@@ -1,25 +1,25 @@
 #ifndef G_FADE_PATTERN_H
 #define G_FADE_PATTERN_H
 
-#include <G_LightPattern.h>
+#include <G_Pattern.h>
 #include <G_Color.h>
 
-class G_FadePattern: public G_LightPattern {
+class G_PatternFade: public G_Pattern {
 public:
-	G_FadePattern(G_PixelGroup* target, G_Color* beginColor, G_Color* targetColor, long duration, long delayAfter,
+	G_PatternFade(G_PixelGroup* target, G_Color* beginColor, G_Color* targetColor, long duration, long delayAfter,
 			int overlapTime, bool doRoundTrip) :
-			G_LightPattern(target, duration, delayAfter, overlapTime), beginColor(
+			G_Pattern(target, duration, delayAfter, overlapTime), beginColor(
 					beginColor), targetColor(targetColor), doRoundTrip(doRoundTrip), curColor(0,0,0){
 	}
 
 	virtual void reset() {
-		G_LightPattern::reset();
+		G_Pattern::reset();
 		curColor.setTo(beginColor);
 		returningToBegin = false;
 	}
 
 	virtual void patternFinished() {
-		G_LightPattern::patternFinished();
+		G_Pattern::patternFinished();
 		beginColor->patternDone();
 		targetColor->patternDone();
 	}
@@ -34,12 +34,12 @@ protected:
 	bool returningToBegin = false;
 
 	virtual void calculateTiming() {
-		G_LightPattern::calculateTiming(getMaxRemainingChange());
+		G_Pattern::calculateTiming(getMaxRemainingChange());
 	}
 
 	virtual void runIteration(Adafruit_NeoPXL8* strip) {
 		if (!returningToBegin) {
-			if (actionRemaining.remaining() > 10) {
+			if (actionCountdown.remaining() > 10) {
 				curColor.fadeTo(targetColor, increment);
 			} else {
 				// no more time to iterate, just go to target values
@@ -50,7 +50,7 @@ protected:
 				returningToBegin = true;
 			}
 		} else {
-			if (actionRemaining.remaining() > 10) {
+			if (actionCountdown.remaining() > 10) {
 				curColor.fadeTo(beginColor, increment);
 			} else {
 				// no more time to iterate, just go to begin values

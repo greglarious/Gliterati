@@ -1,5 +1,5 @@
 #include <G_PatternSequencer.h>
-#include <G_FadePattern.h>
+#include <G_PatternFade.h>
 int8_t pins[8] = { PIN_SERIAL1_RX, PIN_SERIAL1_TX, 11, 13, 5, SDA, A4, A3 };
 Adafruit_NeoPXL8 strip(93, pins, NEO_BRG);
 G_PatternSequencer runner(&strip);
@@ -10,7 +10,7 @@ void buildChase(int chaseLength, int intensity, int duration, int delayAfter, in
     G_Color* fromColor = new G_Color(0,0,0);
     G_Color* toColor = new G_Color(0,0,intensity);
     G_PixelGroup* targetGroup = new G_NthPixelGroup(chaseLength, idx, 31);
-    G_FadePattern* pattern = new G_FadePattern(targetGroup, fromColor, toColor, duration, delayAfter, overlapTime, true);
+    G_PatternFade* pattern = new G_PatternFade(targetGroup, fromColor, toColor, duration, delayAfter, overlapTime, true);
     runner.addPattern(pattern);
   }
 }

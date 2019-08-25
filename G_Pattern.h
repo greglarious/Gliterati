@@ -4,19 +4,19 @@
 #include <G_PixelGroup.h>
 #include <G_Timer.h>
 
-class G_LightPattern {
+class G_Pattern {
 public:
-	G_LightPattern(G_PixelGroup* target, long duration, long delayAfter,
+	G_Pattern(G_PixelGroup* target, long duration, long delayAfter,
 			long overlapTime, bool eraseWhenDone = false) :
 			target(target), overlapTime(overlapTime),
 			eraseWhenDone(eraseWhenDone),
-			actionRemaining(duration, &patternStart),
-			totalRemaining(duration + delayAfter, &patternStart),
-			iterationRemaining(0, &iterationStart){
+			actionCountdown(duration, &patternTimer),
+			totalCountdown(duration + delayAfter, &patternTimer),
+			iterationCountdown(0, &iterationTimer){
 	}
 
 	virtual bool run(Adafruit_NeoPXL8* strip) {
-		if (!patternStart.isStarted() ) {
+		if (!patternTimer.isStarted() ) {
 //			Serial.print("first run pattern:");
 		}
 
@@ -27,7 +27,7 @@ public:
 			//target->erase(strip);
 		}
 
-		if (iterationRemaining.isDone()) {
+		if (iterationCountdown.isDone()) {
 			startIteration();
 			runIteration(strip);
 			calculateTiming();
@@ -39,16 +39,16 @@ public:
 	bool isDone() {
 		//Serial.print("timeRemaining:");
 		//Serial.print(timeRemaining());
-		return totalRemaining.isDone();
+		return totalCountdown.isDone();
 	}
 
 	virtual void reset() {
-		patternStart.reset();
+		patternTimer.reset();
 		iterationCount = 0;
 	}
 
 	bool allowNextPattern() {
-		return totalRemaining.remaining() <= overlapTime;
+		return totalCountdown.remaining() <= overlapTime;
 	}
 
 	virtual void patternFinished() {
@@ -59,7 +59,7 @@ public:
 	}
 
 	long getDuration() {
-		return actionRemaining.getDuration();
+		return actionCountdown.getDuration();
 	}
 
 protected:
@@ -67,13 +67,12 @@ protected:
 	const bool eraseWhenDone = false;
 	const long overlapTime = 0;
 
-    G_Timer patternStart;
-    G_CountdownTimer actionRemaining;
-    G_CountdownTimer totalRemaining;
+    G_Timer patternTimer;
+    G_CountdownTimer actionCountdown;
+    G_CountdownTimer totalCountdown;
 
-    G_Timer iterationStart;
-	G_MicrosTimer iterationStartMicros;
-	G_CountdownTimer iterationRemaining;
+    G_Timer iterationTimer;
+	G_CountdownTimer iterationCountdown;
 
 	int increment = 1;
 	int iterationCount = 0;
@@ -82,16 +81,15 @@ protected:
 	virtual void runIteration(Adafruit_NeoPXL8* strip) = 0;
 
 	void startIteration() {
-		iterationStart.start();
-		iterationStartMicros.start();
-		patternStart.startIfStopped();
+		iterationTimer.start();
+		patternTimer.startIfStopped();
 	}
 
 	// calculates timing based on amount of work to be done
 	void calculateTiming(int remainingChange) {
-		long remainingTime = actionRemaining.remaining();
+		long remainingTime = actionCountdown.remaining();
 
-		long maxIterationsLeft = (remainingTime * 1000) / iterationStartMicros.elapsedMicros();
+		long maxIterationsLeft = (remainingTime * 1000) / iterationTimer.elapsedMicros();
 		//Serial.print(" iterations left:");
 		//Serial.println(maxIterationsLeft);
 
@@ -99,20 +97,20 @@ protected:
 			// plenty of iterations left, slow down and add delay
 			increment = 1;
 			if (remainingTime == 0 || remainingChange == 0) {
-				iterationRemaining.setDuration(0);
+				iterationCountdown.setDuration(0);
 			} else {
-				iterationRemaining.setDuration(remainingTime / remainingChange);
+				iterationCountdown.setDuration(remainingTime / remainingChange);
 			}
 		} else {
 			// cant iterate fast enough, no delay and have to increment > 1
 			increment = remainingChange / maxIterationsLeft;
-			iterationRemaining.setDuration(0);
+			iterationCountdown.setDuration(0);
 		}
 	}
 
 	// calculates timing solely on duration
 	void calculateTimingDelay(long waitMillis) {
-		iterationRemaining.setDuration(waitMillis);
+		iterationCountdown.setDuration(waitMillis);
 	}
 };
 

@@ -1,12 +1,12 @@
 #ifndef G_PATTERN_LOOP_H
 #define G_PATTERN_LOOP_H
 
-#include <G_LightPattern.h>
+#include <G_Pattern.h>
 
-class G_PatternLoop: public G_LightPattern {
+class G_PatternLoop: public G_Pattern {
 public:
-	G_PatternLoop(G_LightPattern* contents, int iterations) :
-			G_LightPattern(NULL, contents->getDuration() * iterations, 0, 0, 0), contents(contents), iterations(iterations) {
+	G_PatternLoop(G_Pattern* contents, int iterations) :
+			G_Pattern(NULL, contents->getDuration() * iterations, 0, 0, 0), contents(contents), iterations(iterations) {
 	}
 
 	bool isDone() {
@@ -15,7 +15,7 @@ public:
 
 
 protected:
-	G_LightPattern* contents = NULL;
+	G_Pattern* contents = NULL;
 	const int iterations = 0;
 	int curIteration = 0;
 

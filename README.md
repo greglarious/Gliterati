@@ -26,11 +26,11 @@ A color value with functions to fade to a different color and calculate iteratio
 #### G_Rainbow
 A G_Color that cycles through the rainbow on each pattern iteration or completion.
 
-#### G_LightPattern
+#### G_Pattern
 An operation performed on a pixel group.  Patterns have a start, a series of iterations, and an end.
 
-#### G_FadePattern
-A G_LightPattern that iterates from a beginning G_Color to an ending G_Color with an option to return bck to the beginning
+#### G_PatternFade
+A G_Pattern that iterates from a beginning G_Color to an ending G_Color with an option to return bck to the beginning
 
 #### G_PatternSequencer
 A collection of patterns performed in seriesd from beginning to end and repeated.  Patterns may overlap.

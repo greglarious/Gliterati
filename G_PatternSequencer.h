@@ -2,7 +2,7 @@
 #define G_PATTERN_SEQUENCER_H
 
 #include <Adafruit_NeoPXL8.h>
-#include <G_LightPattern.h>
+#include <G_Pattern.h>
 
 /**
  * run a list of patterns in sequence
@@ -15,7 +15,7 @@ public:
 			strip(strip) {
 	}
 
-	void addPattern(G_LightPattern* newPattern) {
+	void addPattern(G_Pattern* newPattern) {
 		patterns[numPatterns] = newPattern;
 		numPatterns++;
 	}
@@ -134,7 +134,7 @@ public:
 
 private:
 	Adafruit_NeoPXL8* strip;
-	G_LightPattern* patterns[10];
+	G_Pattern* patterns[10];
 	int numPatterns = 0;
 
 	int startPattern = 0;

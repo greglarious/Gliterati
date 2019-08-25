@@ -1,13 +1,13 @@
 #ifndef G_RANDOM_PATTERN_H
 #define G_RANDOM_PATTERN_H
 
-#include <G_LightPattern.h>
+#include <G_Pattern.h>
 
-class G_RandomPattern: public G_LightPattern {
+class G_PatternRandom: public G_Pattern {
 public:
-	G_RandomPattern(G_PixelGroup* target, bool localPattern, int width, int size, int waitMillis,
+	G_PatternRandom(G_PixelGroup* target, bool localPattern, int width, int size, int waitMillis,
 			long duration, long delayAfter) :
-			G_LightPattern(target, duration, delayAfter, 0, true), localPattern(localPattern), width(width), size(
+			G_Pattern(target, duration, delayAfter, 0, true), localPattern(localPattern), width(width), size(
 					size), waitMillis(waitMillis) {
 	}
 
