@@ -39,7 +39,7 @@ protected:
 
 	virtual void runIteration(Adafruit_NeoPXL8* strip) {
 		if (!returningToBegin) {
-			if (actionTimeRemaining() > 10) {
+			if (actionRemaining.remaining() > 10) {
 				curColor.fadeTo(targetColor, increment);
 			} else {
 				// no more time to iterate, just go to target values
@@ -50,7 +50,7 @@ protected:
 				returningToBegin = true;
 			}
 		} else {
-			if (actionTimeRemaining() > 10) {
+			if (actionRemaining.remaining() > 10) {
 				curColor.fadeTo(beginColor, increment);
 			} else {
 				// no more time to iterate, just go to begin values
