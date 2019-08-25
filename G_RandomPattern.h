@@ -1,3 +1,8 @@
+#ifndef G_RANDOM_PATTERN_H
+#define G_RANDOM_PATTERN_H
+
+#include <G_LightPattern.h>
+
 class G_RandomPattern: public G_LightPattern {
 public:
 	G_RandomPattern(G_PixelGroup* target, bool localPattern, int width, int size, int waitMillis,
@@ -39,4 +44,6 @@ protected:
 		}
 	}
 };
+
+#endif
 

@@ -1,6 +1,14 @@
+#ifndef G_PATTERN_SEQUENCER_H
+#define G_PATTERN_SEQUENCER_H
+
 #include <Adafruit_NeoPXL8.h>
 #include <G_LightPattern.h>
 
+/**
+ * run a list of patterns in sequence
+ * allow overlapping patterns to run simultaneously
+ *
+ */
 class G_PatternSequencer {
 public:
 	G_PatternSequencer(Adafruit_NeoPXL8* strip) :
@@ -41,16 +49,12 @@ public:
 		// run all currently active patterns
 		int numPatternsRun = 0;
 		for (int curPatternIdx = startPattern;
-				numPatternsRun == 0 || curPatternIdx != getPatternAfter(endPattern); curPatternIdx =
-						getPatternAfter(curPatternIdx)) {
+				numPatternsRun == 0 || curPatternIdx != getPatternAfter(endPattern);
+				curPatternIdx =	getPatternAfter(curPatternIdx)) {
 
 			if (validPattern(curPatternIdx)
 					&& !patterns[curPatternIdx]->isDone()) {
 
-				if (patterns[curPatternIdx]->getPatternStart() == 0) {
-//					Serial.print("first run pattern:");
-//					Serial.println(curPatternIdx);
-				}
 				numPatternsRun++;
 				patterns[curPatternIdx]->run(strip); // apply pattern to led strip
 			} else {
@@ -118,12 +122,7 @@ public:
 			startLaunchedSuccessor = false;
 
 		} else {
-			if (wasDoneEnough) {
-				Serial.print("pattern: ");
-				Serial.print(startPattern);
-				Serial.print(" time remaining:");
-				Serial.println(patterns[startPattern]->timeRemaining());
-			}
+
 		}
 	}
 
@@ -145,3 +144,5 @@ private:
 	bool reportNoRun = false;
 	int  numPrestart = 0;
 };
+
+#endif

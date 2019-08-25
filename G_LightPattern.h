@@ -1,3 +1,6 @@
+#ifndef G_LIGHT_PATTERN_H
+#define G_LIGHT_PATTERN_H
+
 #include <G_PixelGroup.h>
 
 class G_LightPattern {
@@ -9,6 +12,17 @@ public:
 	}
 
 	virtual bool run(Adafruit_NeoPXL8* strip) {
+		if (patternStart == 0) {
+//			Serial.print("first run pattern:");
+		}
+
+		bool finalRun = false;
+		if (finalRun && eraseWhenDone) {
+			Serial.println("erase");
+			// TODO: need finalAction and finalRun bools sent to run
+			//target->erase(strip);
+		}
+
 		if (millis() < iterationDelayTime) {
 			// do nothing, waiting until end of iteration
 		} else {
@@ -17,7 +31,6 @@ public:
 			calculateTiming();
 		}
 
-		checkErase(strip);
 		return isDone();
 	}
 
@@ -27,26 +40,10 @@ public:
 		return timeRemaining() == 0;
 	}
 
-	void checkErase(Adafruit_NeoPXL8* strip) {
-		if (eraseWhenDone && isDone() && !didErase) {
-			didErase = true;
-			Serial.println("erase");
-			target->erase(strip);
-		}
-	}
-
 	virtual void reset() {
 		patternStart = 0;
 		iterationCount = 0;
-		didErase = false;
 	}
-
-	long totalTime() { return duration + delayAfter; }
-	long timeRemaining() {
-		return max(0, totalTime() - timeSpent());
-	}
-
-	long getPatternStart() { return patternStart; }
 
 	bool allowNextPattern() {
 		return timeRemaining() <= overlapTime;
@@ -54,7 +51,13 @@ public:
 
 	virtual void patternFinished() {
 		Serial.println("light pattern finished");
-		target->patternFinished();
+		if (target != NULL) {
+			target->patternFinished();
+		}
+	}
+
+	long getDuration() {
+		return duration;
 	}
 
 protected:
@@ -64,13 +67,20 @@ protected:
 	const long delayAfter = 0;
 	const long overlapTime = 0;
 
-	bool didErase = false;
 	long patternStart = 0;
 	long iterationStartMicros = micros();
 
 	int increment = 1;
 	long iterationDelayTime = 0;
 	int iterationCount = 0;
+
+	long timeRemaining() {
+		return max(0, totalTime() - timeSpent());
+	}
+
+	long totalTime() {
+		return duration + delayAfter;
+	}
 
 	virtual void calculateTiming() = 0;
 	virtual void runIteration(Adafruit_NeoPXL8* strip) = 0;
@@ -127,3 +137,5 @@ protected:
 		iterationDelayTime = millis() + waitMillis;
 	}
 };
+
+#endif

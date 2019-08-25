@@ -1,3 +1,8 @@
+#ifndef G_MOVING_PIXEL_GROUP_H
+#define G_MOVING_PIXEL_GROUP_H
+
+#include <G_PixelGroup.h>
+
 class G_MovingPixelGroup: public G_SegmentPixelGroup {
 public:
 	G_MovingPixelGroup(int start, int end, int* startList, int startListLength,
@@ -7,6 +12,7 @@ public:
 					endListLength) {
 	}
 
+	// light patterns inform target pixel group when they are finished
 	virtual void patternFinished() {
 		if (moveToTarget(&start, startList[curStartTarget], 1)) {
 			incrementWithWrap(&curStartTarget, startListLength);
@@ -42,6 +48,7 @@ protected:
 	int endListLength;
 	int curEndTarget = 0;
 
+	// increment towards a target and wrap to zero
 	void incrementWithWrap(int* target, int max) {
 		(*target)++;
 		if (*target >= max) {
@@ -49,6 +56,8 @@ protected:
 		}
 	}
 
+	// move the curValue towards the target in increments
+	// return true if target reached
 	bool moveToTarget(int* curValue, int targetValue, int increment) {
 		bool atTarget = true;
 
@@ -64,3 +73,5 @@ protected:
 		return atTarget;
 	}
 };
+
+#endif

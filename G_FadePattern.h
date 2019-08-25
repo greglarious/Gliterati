@@ -1,3 +1,7 @@
+#ifndef G_FADE_PATTERN_H
+#define G_FADE_PATTERN_H
+
+#include <G_LightPattern.h>
 #include <G_Color.h>
 
 class G_FadePattern: public G_LightPattern {
@@ -74,3 +78,5 @@ protected:
 		return rval;
 	}
 };
+
+#endif

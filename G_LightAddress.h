@@ -1,3 +1,5 @@
+#ifndef G_LIGHT_ADDRESS_H
+#define G_LIGHT_ADDRESS_H
 
 class G_LightAddress {
 public:
@@ -27,3 +29,5 @@ public:
 		return idx - THIS_CONTROLLER_START_IDX;
 	}
 };
+
+#endif

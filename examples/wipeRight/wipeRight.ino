@@ -8,12 +8,14 @@ G_PatternSequencer runner(&strip);
 
 
 void setup() {
-  strip.begin();  
+  strip.begin();
   delay(2000);
   Serial.begin(115200);
 
   G_MovingPixelGroup* moveGrp = new G_MovingPixelGroup(0, 1, new int[2]{0,20}, 2, new int[2]{1,21}, 2);
-  G_FadePattern* pattern = new G_FadePattern(moveGrp, 0,0,0, 0,0,255, 300, 0, 0, false);
+  G_Color startColor(0,0,0);
+  G_Color endColor(0,0,255);
+  G_FadePattern* pattern = new G_FadePattern(moveGrp, &startColor, &endColor, 300, 0, 0, false);
   runner.addPattern(pattern);
 }
 

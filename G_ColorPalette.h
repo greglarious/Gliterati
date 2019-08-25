@@ -1,3 +1,6 @@
+#ifndef G_COLOR_PALLET_H
+#define G_COLOR_PALLET_H
+
 class G_ColorPalette {
 	uint32_t entries[10];
 	int numEntries;
@@ -15,3 +18,5 @@ public:
 		return entries[random(numEntries)];
 	}
 };
+
+#endif

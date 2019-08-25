@@ -1,3 +1,6 @@
+#ifndef G_COLOR_H
+#define G_COLOR_H
+
 class G_Color {
 public:
 	uint8_t redVal = 0;
@@ -69,3 +72,5 @@ protected:
 		return rval;
 	}
 };
+
+#endif

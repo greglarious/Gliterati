@@ -1,3 +1,6 @@
+#ifndef G_LIGHT_UTIL_H
+#define G_LIGHT_UTIL_H
+
 // r  b  g
 uint32_t red = Adafruit_NeoPixel::Color(255, 0, 0);
 uint32_t yellow = Adafruit_NeoPixel::Color(255, 0, 130);
@@ -33,3 +36,5 @@ public:
 		strip->show();
 	}
 };
+
+#endif

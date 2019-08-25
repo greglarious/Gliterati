@@ -1,3 +1,8 @@
+#ifndef G_RAINBOW_H
+#define G_RAINBOW_H
+
+#include <G_Color.h>
+
 class G_Rainbow: public G_Color {
 public:
 	G_Rainbow(int iterationInc, int patternInc) :
@@ -66,3 +71,5 @@ protected:
 	}
 
 };
+
+#endif
