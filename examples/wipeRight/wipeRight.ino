@@ -12,7 +12,7 @@ void setup() {
   delay(2000);
   Serial.begin(115200);
 
-  G_PixelGroupMoving* moveGrp = new G_PixelGroupMoving(0, 1, new int[2]{0,20}, 2, new int[2]{1,21}, 2);
+  G_PixelGroup* moveGrp = new G_PixelGroupMoving(0, 1, new int[2]{0,20}, 2, new int[2]{1,21}, 2);
   G_Color startColor(0,0,0);
   G_Color endColor(0,0,255);
   G_PatternFade* pattern = new G_PatternFade(moveGrp, &startColor, &endColor, 300, 0, 0, false);
