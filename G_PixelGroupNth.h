@@ -3,9 +3,9 @@
 
 #include <G_PixelGroup.h>
 
-class G_NthPixelGroup: public G_PixelGroup {
+class G_PixelGroupNth: public G_PixelGroup {
 public:
-	G_NthPixelGroup(int size, int order, int maxIndex) :
+	G_PixelGroupNth(int size, int order, int maxIndex) :
 			size(size), order(order), maxIndex(maxIndex) {
 	}
 

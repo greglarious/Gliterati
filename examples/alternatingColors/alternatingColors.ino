@@ -3,7 +3,7 @@
 int8_t pins[8] = { PIN_SERIAL1_RX, PIN_SERIAL1_TX, 11, 13, 5, SDA, A4, A3 };
 Adafruit_NeoPXL8 strip(93, pins, NEO_BRG);
 G_PatternSequencer runner(&strip);
-G_AllPixelGroup all;
+G_PixelGroupAll all;
 
 int intensity = 60;
 G_Color* c1 = new G_Color(0,intensity,0);

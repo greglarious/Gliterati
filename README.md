@@ -14,11 +14,11 @@ The ideas in this repo are being actively refined as of 04/13/19. Currently in a
 ## Concepts
 #### G_PixelGroup
 A set of pixels to be acted on.  Actions include setting to a color and errasing. PixelGroups are aware of the pattern iteration/completion cycle. Subclasses include:
-- G_AllPixelGroup: every pixel on the strand
-- G_SegmentPixelGroup: pixels between a start and end index
-- G_CollectionPixelGroup: pixels identified by a list of abitrary choices
-- G_NthPixelGroup: every X out of N pixels up to a max index
-- G_MovingPixelGroup: a SegmentPixelGroup where the start and end indexes move each time a pattern finishes
+- G_PixelGroupAll: every pixel on the strand
+- G_PixelGroupSegment: pixels between a start and end index
+- G_PixelGroupCollection: pixels identified by a list of abitrary choices
+- G_PixelGroupNth: every X out of N pixels up to a max index
+- G_PixelGroupMoving: a SegmentPixelGroup where the start and end indexes move each time a pattern finishes
 
 #### G_Color
 A color value with functions to fade to a different color and calculate iterations needed to fade to a particular color.  G_Colors are aware of the pattern iteration/completion cycle.

@@ -1,13 +1,13 @@
 #ifndef G_MOVING_PIXEL_GROUP_H
 #define G_MOVING_PIXEL_GROUP_H
 
-#include <G_PixelGroup.h>
+#include <G_PixelGroupSegment.h>
 
-class G_MovingPixelGroup: public G_SegmentPixelGroup {
+class G_PixelGroupMoving: public G_PixelGroupSegment {
 public:
-	G_MovingPixelGroup(int start, int end, int* startList, int startListLength,
+	G_PixelGroupMoving(int start, int end, int* startList, int startListLength,
 			int* endList, int endListLength) :
-			G_SegmentPixelGroup(start, end), startList(startList), startListLength(
+			G_PixelGroupSegment(start, end), startList(startList), startListLength(
 					startListLength), endList(endList), endListLength(
 					endListLength) {
 	}

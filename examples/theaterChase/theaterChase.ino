@@ -9,7 +9,7 @@ void buildChase(int chaseLength, int intensity, int duration, int delayAfter, in
 
     G_Color* fromColor = new G_Color(0,0,0);
     G_Color* toColor = new G_Color(0,0,intensity);
-    G_PixelGroup* targetGroup = new G_NthPixelGroup(chaseLength, idx, 31);
+    G_PixelGroup* targetGroup = new G_PixelGroupNth(chaseLength, idx, 31);
     G_PatternFade* pattern = new G_PatternFade(targetGroup, fromColor, toColor, duration, delayAfter, overlapTime, true);
     runner.addPattern(pattern);
   }
