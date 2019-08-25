@@ -1,6 +1,8 @@
 #ifndef G_LIGHT_UTIL_H
 #define G_LIGHT_UTIL_H
 
+#include <Adafruit_NeoPXL8.h>
+
 // r  b  g
 uint32_t red = Adafruit_NeoPixel::Color(255, 0, 0);
 uint32_t yellow = Adafruit_NeoPixel::Color(255, 0, 130);
