@@ -16,10 +16,6 @@ public:
 	}
 
 	virtual bool run(Adafruit_NeoPXL8* strip) {
-		if (!patternTimer.isStarted() ) {
-//			Serial.print("first run pattern:");
-		}
-
 		bool finalRun = false;
 		if (finalRun && eraseWhenDone) {
 			Serial.println("erase");
@@ -27,11 +23,11 @@ public:
 			//target->erase(strip);
 		}
 
-		if (iterationCountdown.isDone()) {
+		if (!patternTimer.isStarted() || iterationCountdown.isDone()) {
 			startIteration();
-			runIteration(strip);
 			calculateTiming();
 		}
+		runIteration(strip);
 
 		return isDone();
 	}
@@ -48,7 +44,11 @@ public:
 	}
 
 	bool allowNextPattern() {
-		return totalCountdown.remaining() <= overlapTime;
+		Serial.print("total countdown remaining");
+		Serial.println(totalCountdown.remaining());
+		bool rval = totalCountdown.remaining() <= overlapTime;
+		if (!rval) Serial.println("not allow next pattern");
+		return rval;
 	}
 
 	virtual void patternFinished() {
