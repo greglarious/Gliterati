@@ -21,7 +21,7 @@ protected:
 		calculateTimingDelay(waitMillis);
 	}
 
-	void runIteration(Adafruit_NeoPXL8* strip) {
+	void runIteration(CRGB* strip) {
 		uint32_t color;
 		if (millis() < (patternStart + duration)) {
 			for (int idx = 0; idx < width; idx++) {
@@ -40,10 +40,9 @@ protected:
 					G_LightUtil::setColumnColor(strip, idx, color);
 				} // field vs individual
 			}
-			strip->show();
+			FastLED.show();
 		}
 	}
 };
 
 #endif
-

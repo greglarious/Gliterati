@@ -1,41 +1,41 @@
 #ifndef G_LIGHT_UTIL_H
 #define G_LIGHT_UTIL_H
 
-#include <Adafruit_NeoPXL8.h>
+#include <FastLED.h>
 
 // r  b  g
-uint32_t red = Adafruit_NeoPixel::Color(255, 0, 0);
-uint32_t yellow = Adafruit_NeoPixel::Color(255, 0, 130);
-uint32_t green = Adafruit_NeoPixel::Color(0, 0, 255);
-uint32_t black = Adafruit_NeoPixel::Color(0, 0, 0);
+uint32_t red = CRGB(255, 0, 0);
+uint32_t yellow = CRGB(255, 0, 130);
+uint32_t green = CRGB(0, 0, 255);
+uint32_t black = CRGB(0, 0, 0);
 
 class G_LightUtil {
 public:
-	static uint32_t randomDistinctiveColor(Adafruit_NeoPXL8* strip) {
+	static uint32_t randomDistinctiveColor(CRGB* strip) {
 		// 64 possible color choices
-		return strip->Color(random(4) * 64, random(4) * 64, random(4) * 64);
+		return CRGB(random(4) * 64, random(4) * 64, random(4) * 64);
 	}
 
-	static void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) {
+	static void setAllColor(CRGB* strip, uint32_t color) {
 		for (int idx = 0; idx < G_LightAddress::NUM_PIXELS; idx++) {
-			strip->setPixelColor(idx, color);
+			strip[idx] = color;
 		}
 	}
 
-	static void setColumnColor(Adafruit_NeoPXL8* strip, int rawIdx,
+	static void setColumnColor(CRGB* strip, int rawIdx,
 			uint32_t c) {
 		// LED strip mounted is indexed right to left but field address is left to right
 		int idx = (G_LightAddress::ROW_WIDTH - 1) - rawIdx;
-		strip->setPixelColor(idx, c);
-		strip->setPixelColor(G_LightAddress::ROW_2 - 1 - idx, c); // row 2 goes backwards
-		strip->setPixelColor(G_LightAddress::ROW_2 + idx, c);
+		strip[idx] = c;
+		strip[G_LightAddress::ROW_2 - 1 - idx] = c; // row 2 goes backwards
+		strip[G_LightAddress::ROW_2 + idx] = c;
 	}
 
-	static void erase(Adafruit_NeoPXL8* strip) {
+	static void erase(CRGB* strip) {
 		for (int idx = 0; idx < G_LightAddress::NUM_PIXELS; idx++) {
-			strip->setPixelColor(idx, black);
+			strip[idx] = black;
 		}
-		strip->show();
+		FastLED.show();
 	}
 };
 

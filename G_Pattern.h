@@ -15,7 +15,7 @@ public:
 			iterationCountdown(0, &iterationTimer){
 	}
 
-	virtual bool run(Adafruit_NeoPXL8* strip) {
+	virtual bool run(CRGB* strip) {
 		bool finalRun = false;
 		if (finalRun && eraseWhenDone) {
 			Serial.println("erase");
@@ -78,7 +78,7 @@ protected:
 	int iterationCount = 0;
 
 	virtual void calculateTiming() = 0;
-	virtual void runIteration(Adafruit_NeoPXL8* strip) = 0;
+	virtual void runIteration(CRGB* strip) = 0;
 
 	void startIteration() {
 		iterationTimer.start();

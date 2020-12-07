@@ -9,17 +9,17 @@ public:
 			size(size), order(order), maxIndex(maxIndex) {
 	}
 
-	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) {
+	virtual void setAllColor(CRGB* strip, uint32_t color) {
 		for (int idx = 0; idx <= maxIndex; idx++) {
 			if (applies(idx))
-				strip->setPixelColor(idx, color);
+				strip[idx] = color;
 		}
 	}
 
-	virtual void erase(Adafruit_NeoPXL8* strip) {
+	virtual void erase(CRGB* strip) {
 		for (int idx = 0; idx <= maxIndex; idx++) {
 			if (applies(idx))
-				strip->setPixelColor(idx, black);
+				strip[idx] = black;
 		}
 	}
 protected:

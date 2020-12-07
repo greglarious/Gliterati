@@ -37,7 +37,7 @@ protected:
 		G_Pattern::calculateTiming(getMaxRemainingChange());
 	}
 
-	virtual void runIteration(Adafruit_NeoPXL8* strip) {
+	virtual void runIteration(CRGB* strip) {
 		if (!returningToBegin) {
 			if (actionCountdown.remaining() > 10) {
 				curColor.fadeTo(targetColor, increment);
@@ -59,7 +59,7 @@ protected:
 		}
 
 		target->setAllColor(strip, curColor.getColor());
-		strip->show();
+		FastLED.show();
 		beginColor->iterationDone();
 		targetColor->iterationDone();
 	}

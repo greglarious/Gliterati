@@ -13,15 +13,15 @@ public:
 		groupSize = 0;
 	}
 
-	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) {
+	virtual void setAllColor(CRGB* strip, uint32_t color) {
 		for (int idx = 0; idx < groupSize; idx++) {
-			strip->setPixelColor(indexes[idx], color);
+			strip[indexes[idx], color);
 		}
 	}
 
-	virtual void erase(Adafruit_NeoPXL8* strip) {
+	virtual void erase(CRGB* strip) {
 		for (int idx = 0; idx < groupSize; idx++) {
-			strip->setPixelColor(indexes[idx], black);
+			strip[indexes[idx], black);
 		}
 	}
 

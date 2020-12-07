@@ -51,7 +51,7 @@ public:
 	}
 
 	uint32_t getColor() {
-		uint32_t rval = Adafruit_NeoPixel::Color(redVal, greenVal, blueVal);
+		uint32_t rval = CRGB(redVal, greenVal, blueVal);
 		return rval;
 	}
 

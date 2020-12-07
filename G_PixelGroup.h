@@ -9,9 +9,9 @@ public:
 	G_PixelGroup() {
 	}
 
-	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) = 0;
+	virtual void setAllColor(CRGB* strip, uint32_t color) = 0;
 
-	virtual void erase(Adafruit_NeoPXL8* strip) = 0;
+	virtual void erase(CRGB* strip) = 0;
 
 	virtual void patternFinished() {
 	}
@@ -20,11 +20,11 @@ public:
 class G_PixelGroupAll: public G_PixelGroup {
 public:
 
-	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) {
+	virtual void setAllColor(CRGB* strip, uint32_t color) {
 		G_LightUtil::setAllColor(strip, color);
 	}
 
-	virtual void erase(Adafruit_NeoPXL8* strip) {
+	virtual void erase(CRGB* strip) {
 		G_LightUtil::setAllColor(strip, black);
 	}
 };

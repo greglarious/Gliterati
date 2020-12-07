@@ -11,9 +11,9 @@ public:
 	static const int ROW_0 = 0;
 	static const int ROW_1 = ROW_WIDTH;
 	static const int ROW_2 = (ROW_WIDTH * 2);
-	static const int NUM_CONTROLLERS = 10;
+	static const int NUM_LED_CONTROLLERS = 10;
 
-	static const int FIELD_WIDTH = (NUM_CONTROLLERS * ROW_WIDTH);
+	static const int FIELD_WIDTH = (NUM_LED_CONTROLLERS * ROW_WIDTH);
 
 	static const int CONTROLLER_NUM = (MY_ADDRESS - 1);  // 0 to 9
 	static const int THIS_CONTROLLER_START_IDX = (CONTROLLER_NUM * ROW_WIDTH);

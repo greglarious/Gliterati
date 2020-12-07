@@ -22,7 +22,7 @@ protected:
 	virtual void calculateTiming() {
 	}
 
-	virtual void runIteration(Adafruit_NeoPXL8* strip) {
+	virtual void runIteration(CRGB* strip) {
 		contents->run(strip);
 	}
 };

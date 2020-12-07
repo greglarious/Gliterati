@@ -8,15 +8,15 @@ public:
 	G_PixelGroupSegment(int start, int end) :
 			start(start), end(end) {
 	}
-	virtual void setAllColor(Adafruit_NeoPXL8* strip, uint32_t color) {
+	virtual void setAllColor(CRGB* strip, uint32_t color) {
 		for (int idx = start; idx < end; idx++) {
-			strip->setPixelColor(idx, color);
+			strip[idx, color);
 		}
 	}
 
-	virtual void erase(Adafruit_NeoPXL8* strip) {
+	virtual void erase(CRGB* strip) {
 		for (int idx = start; idx < end; idx++) {
-			strip->setPixelColor(idx, black);
+			strip[idx, black);
 		}
 	}
 

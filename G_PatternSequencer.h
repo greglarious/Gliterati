@@ -1,7 +1,7 @@
 #ifndef G_PATTERN_SEQUENCER_H
 #define G_PATTERN_SEQUENCER_H
 
-#include <Adafruit_NeoPXL8.h>
+#include <FastLED.h>
 #include <G_Pattern.h>
 
 /**
@@ -11,8 +11,9 @@
  */
 class G_PatternSequencer {
 public:
-	G_PatternSequencer(Adafruit_NeoPXL8* strip) :
-			strip(strip) {
+	G_PatternSequencer(CRGB* strip)
+	{
+	  this->strip = strip;
 	}
 
 	void addPattern(G_Pattern* newPattern) {
@@ -129,11 +130,11 @@ public:
 	void stopAllPatterns() {
 		clearPatterns();
 		G_LightUtil::setAllColor(strip, black);
-		strip->show();
+		FastLED.show();
 	}
 
 private:
-	Adafruit_NeoPXL8* strip;
+	CRGB* strip;
 	G_Pattern* patterns[10];
 	int numPatterns = 0;
 
